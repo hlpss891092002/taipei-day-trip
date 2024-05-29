@@ -2,7 +2,7 @@ from typing import List, Union
 from fastapi import *
 from fastapi.responses import FileResponse, ORJSONResponse
 from pydantic import BaseModel
-from db_search import get_MRT_ORDERBY_spot_count, get_attraction_by_id
+from db_search import get_MRT_ORDERBY_spot_count, get_attraction_by_id, get_attraction_by_keyword_page
 
 app= FastAPI()
 
@@ -21,8 +21,15 @@ async def booking(request: Request):
 async def thankyou(request: Request):
 	return FileResponse("./static/thankyou.html", media_type="text/html")
 @app.get("/api/attractions")
-async def get_attraction():
-	pass
+async def get_attraction(keyword: str = None, page: int = 0):
+	try:
+		return  get_attraction_by_keyword_page(keyword, page)
+	except:
+		error_message ={
+			"error": True,
+			"message": "伺服器內部錯誤"
+		}
+		return ORJSONResponse(status_code=500, content=error_message)
 @app.get("/api/attraction/{attractionId}")
 async def get_attraction_from_id(attractionId):
 	try:
@@ -52,4 +59,4 @@ async def get_mrt():
 			"error": True,
 			"message": "伺服器內部錯誤"
 		}
-		return error_message
+		return ORJSONResponse(status_code=500, content=error_message)
