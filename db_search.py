@@ -1,25 +1,17 @@
 import mysql.connector
+import mysql.connector.pooling
 import json
 
-dbconfig = {
-  "host":"localhost",
-  "user":"root",
-  "password":"0000",
-  "database":"wehelp_stage2_taipei_spot",
-}
-
-cnxpool = mysql.connector.pooling.MySQLConnectionPool(
-  pool_name="mypool",
-  pool_size=3,
-  **dbconfig
+mydb = mysql.connector.connect(
+  host = "localhost",
+  user = "root",
+  password = "0000",
+  database = "wehelp_stage2_taipei_spot",
 )
-
-cnx1 = cnxpool.get_connection()
-
 
 
 def get_distinctMRT ():
-  mycursor = cnx1.cursor()
+  mycursor = mydb.cursor()
   MRT_List = []
   mycursor.execute("SELECT DISTINCT MRT fROM taipei_attraction ")
   result = mycursor.fetchall()
@@ -31,7 +23,7 @@ def get_distinctMRT ():
   return MRT_List
 
 def get_MRT_spot_NUM(MRT_List):
-  mycursor = cnx1.cursor()
+  mycursor = mydb.cursor()
   M_C_dict = {}
   for MRT in MRT_List:
     sql = "SELECT COUNT(*) fROM taipei_attraction WHERE MRT = %s"
@@ -43,7 +35,7 @@ def get_MRT_spot_NUM(MRT_List):
   return M_C_dict
     
 def insert_MRT_count(MRT_List, M_C_dict):
-  mycursor = cnx1.cursor()
+  mycursor = mydb.cursor()
   for MRT in MRT_List:
     count = M_C_dict[f"{MRT}"]
     sql = "INSERT INTO mrt_list(MRT_name, spot_count) values (%s, %s)"
@@ -62,7 +54,7 @@ def insert_MRT_count(MRT_List, M_C_dict):
 
 
 def get_MRT_ORDERBY_spot_count():
-  mycursor = cnx1.cursor()
+  mycursor = mydb.cursor()
   mrt_list = []
   sql = """SELECT MRT_name, spot_count FROM mrt_list ORDER BY spot_count DESC"""
   mycursor.execute(sql)
@@ -75,7 +67,7 @@ def get_MRT_ORDERBY_spot_count():
 def get_attraction_by_id(id):
   try:
     attraction_data={}
-    mycursor = cnx1.cursor(dictionary = True)
+    mycursor = mydb.cursor(dictionary = True)
     sql1= "select * from taipei_attraction where id = %s"
     val = (f"{id}",)
     mycursor.execute(sql1, val)
@@ -102,7 +94,7 @@ def get_attraction_by_id(id):
     return None 
 
 def get_images (id):
-  mycursor = cnx1.cursor(dictionary = True)
+  mycursor = mydb.cursor(dictionary = True)
   photo_list = []
   sql = "select photo from photo_file where attraction_id = %s"
   val = (id, )
@@ -129,14 +121,14 @@ def load_attraction_data(result):
 
 def check_next_page_empty(page, keyword = None):
   if keyword is  None:
-    mycursor = cnx1.cursor(dictionary = True)
+    mycursor = mydb.cursor(dictionary = True)
     sql= "select * from taipei_attraction LIMIT %s, 12"
     val = ((page+1)*12,)
     mycursor.execute(sql, val)
     result = mycursor.fetchall()
     return (len(result) == 0)
   if keyword is not None:
-    mycursor = cnx1.cursor(dictionary = True)
+    mycursor = mydb.cursor(dictionary = True)
     sql = "SELECT * FROM taipei_attraction WHERE MRT = %s or name like %s LIMIT %s , 12"
     val = (keyword, f"%{keyword}%" ,(page+1)*12)
     mycursor.execute(sql, val)
@@ -152,7 +144,7 @@ def get_attraction_by_keyword_page(keyword = None, page = 0):
         else:
           response_joson["nextPage"] = page+1
         response_data_list = []
-        mycursor = cnx1.cursor(dictionary = True)
+        mycursor = mydb.cursor(dictionary = True)
         sql= "select * from taipei_attraction LIMIT %s, 12"
         val = (page*12,)
         mycursor.execute(sql,val)
@@ -169,7 +161,7 @@ def get_attraction_by_keyword_page(keyword = None, page = 0):
         else:
           response_joson["nextPage"] = page+1
         response_data_list = []
-        mycursor = cnx1.cursor(dictionary = True)
+        mycursor = mydb.cursor(dictionary = True)
         sql= "select * from taipei_attraction WHERE MRT = %s OR name Like %s  LIMIT %s, 12 "
         val = (keyword, f"%{keyword}%", page*12)
         mycursor.execute(sql,val)
