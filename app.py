@@ -1,6 +1,6 @@
 from typing import List, Union
 from fastapi import *
-from fastapi.responses import FileResponse, ORJSONResponse
+from fastapi.responses import FileResponse, JSONResponse
 from pydantic import BaseModel
 from db_search import get_MRT_ORDERBY_spot_count, get_attraction_by_id, get_attraction_by_keyword_page
 
@@ -29,13 +29,13 @@ async def get_attraction(keyword: str = None, page: int = 0):
 			"error": True,
 			"message": "伺服器內部錯誤"
 		}
-		return ORJSONResponse(status_code=500, content=error_message)
+		return JSONResponse(status_code=500, content=error_message)
 @app.get("/api/attraction/{attractionId}")
 async def get_attraction_from_id(attractionId):
 	try:
 		data = get_attraction_by_id(attractionId)
 		if data is None:
-			return ORJSONResponse(status_code=400, content={"error":True, "message":"景點編號不正確"})
+			return JSONResponse(status_code=400, content={"error":True, "message":"景點編號不正確"})
 		else :
 			response_200 = {}
 			response_200["data"] = data 
@@ -45,7 +45,7 @@ async def get_attraction_from_id(attractionId):
 			"error": True,
 			"message": "伺服器內部錯誤"
 		}
-		return ORJSONResponse(status_code=500, content=error_message)
+		return JSONResponse(status_code=500, content=error_message)
 @app.get("/api/mrt")
 async def get_mrt():
 	try:
@@ -59,4 +59,4 @@ async def get_mrt():
 			"error": True,
 			"message": "伺服器內部錯誤"
 		}
-		return ORJSONResponse(status_code=500, content=error_message)
+		return JSONResponse(status_code=500, content=error_message)

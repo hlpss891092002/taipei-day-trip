@@ -10,9 +10,6 @@ mydb = mysql.connector.connect(
 )
 
 
-
-
-
 def get_MRT_ORDERBY_spot_count():
   mycursor = mydb.cursor()
   mrt_list = []
