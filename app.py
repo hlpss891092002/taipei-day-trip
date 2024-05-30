@@ -46,7 +46,7 @@ async def get_attraction_from_id(attractionId):
 			"message": "伺服器內部錯誤"
 		}
 		return JSONResponse(status_code=500, content=error_message)
-@app.get("/api/mrt")
+@app.get("/api/mrts")
 async def get_mrt():
 	try:
 			mrt_list = get_MRT_ORDERBY_spot_count()
