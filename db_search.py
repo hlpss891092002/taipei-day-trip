@@ -9,47 +9,6 @@ mydb = mysql.connector.connect(
   database = "wehelp_stage2_taipei_spot",
 )
 
-
-def get_MRT_ORDERBY_spot_count():
-  mycursor = mydb.cursor()
-  mrt_list = []
-  sql = """SELECT MRT_name, spot_count FROM mrt_list ORDER BY spot_count DESC"""
-  mycursor.execute(sql)
-  result = mycursor.fetchall()
-  for data in result:
-    mrt = data[0]
-    mrt_list.append(mrt)
-  return(mrt_list)  
-
-def get_attraction_by_id(id):
-  try:
-    attraction_data={}
-    mycursor = mydb.cursor(dictionary = True)
-    sql1= "select * from taipei_attraction where id = %s"
-    val = (f"{id}",)
-    mycursor.execute(sql1, val)
-    result = mycursor.fetchall()[0]
-    attraction_data["id"] = result["id"]
-    attraction_data["name"] = result["name"]
-    attraction_data["category"] = result["CAT"]
-    attraction_data["description"] = result["description"]
-    attraction_data["address"] = result["address"]
-    attraction_data["transport"] = result["direction"]
-    attraction_data["mrt"] = result["MRT"]
-    attraction_data["lat"] = result["latitude"]
-    attraction_data["lng"] = result["longitude"]
-# get file
-    photo_list = []
-    sql2 = "select photo from photo_file where attraction_id = %s"
-    mycursor.execute(sql2,val)
-    result2 = mycursor.fetchall()
-    for photo in result2:
-      photo_list.append(photo["photo"])
-    attraction_data["images"] = photo_list
-    return (attraction_data)
-  except:
-    return None 
-
 def get_images (id):
   mycursor = mydb.cursor(dictionary = True)
   photo_list = []
@@ -60,6 +19,7 @@ def get_images (id):
   for photo in result:
     photo_list.append(photo["photo"])
   return photo_list
+
 
 def load_attraction_data(result):
   attraction_data={}
@@ -91,7 +51,8 @@ def check_next_page_empty(page, keyword = None):
     mycursor.execute(sql, val)
     result = mycursor.fetchall()
     return (len(result) == 0)
-  
+
+
 def get_attraction_by_keyword_page(keyword = None, page = 0):
     try:
       if keyword  is None: #無關鍵字
@@ -131,3 +92,42 @@ def get_attraction_by_keyword_page(keyword = None, page = 0):
     except:
       print("錯誤")
       return None 
+    
+def get_attraction_by_id(id):
+  try:
+    attraction_data={}
+    mycursor = mydb.cursor(dictionary = True)
+    sql1= "select * from taipei_attraction where id = %s"
+    val = (f"{id}",)
+    mycursor.execute(sql1, val)
+    result = mycursor.fetchall()[0]
+    attraction_data["id"] = result["id"]
+    attraction_data["name"] = result["name"]
+    attraction_data["category"] = result["CAT"]
+    attraction_data["description"] = result["description"]
+    attraction_data["address"] = result["address"]
+    attraction_data["transport"] = result["direction"]
+    attraction_data["mrt"] = result["MRT"]
+    attraction_data["lat"] = result["latitude"]
+    attraction_data["lng"] = result["longitude"]
+# get file
+    photo_list = get_images (id)
+    attraction_data["images"] = photo_list
+    return (attraction_data)
+  except:
+    return None 
+
+def get_MRT_ORDERBY_spot_count():
+  mycursor = mydb.cursor()
+  mrt_list = []
+  sql = """SELECT MRT 
+          FROM taipei_attraction
+          WHERE MRT IS NOT NULL
+          GROUP BY MRT
+          ORDER BY count(*) DESC"""
+  mycursor.execute(sql)
+  result = mycursor.fetchall()
+  for data in result:
+    mrt = data[0]
+    mrt_list.append(mrt)
+  (mrt_list)  

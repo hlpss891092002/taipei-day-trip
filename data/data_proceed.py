@@ -44,13 +44,7 @@ mycursor.execute("""CREATE TABLE photo_file(
                  PRIMARY KEY(id),
                  FOREIGN KEY photo_file(attraction_id) 	REFERENCES taipei_attraction(id)
 )""")
-# CREATE TABLE MRT_LIS
-mycursor.execute("""CREATE TABLE mrt_list(
-	id BIGINT AUTO_INCREMENT,
-	MRT_name varchar(255),
-	spot_count int,
-primary KEY (id)
-)""")
+
 
 
 def insert_value_in_taipei_table(spot):
@@ -79,10 +73,18 @@ def file_list(spot):
       photo_list.append(info)
   return photo_list
 
-def insert_value_in_photo(count, photo_list):
+def get_id (spot):
+  name = spot["name"]
+  sql = "SELECT id FROM  taipei_attraction WHERE name =%s"
+  val = (name, )
+  mycursor.execute(sql, val)
+  id = mycursor.fetchone()[0]
+  print(id)
+
+def insert_value_in_photo(id, photo_list):
   for photo in photo_list:
     sql = """INSERT INTO photo_file(attraction_id, photo) VALUES(%s, %s)"""
-    val = (count, f"{photo}")
+    val = (id, f"{photo}")
     mycursor.execute(sql, val)
     mydb.commit()
     print(mycursor.rowcount, "record inserted in photo_file.")
@@ -92,56 +94,11 @@ def insert_value_in_photo(count, photo_list):
 with open("taipei-attractions.json", encoding='utf8') as f:
   data = json.load(f)
 all_data = data["result"]["results"]
-count = 1
 for spot in all_data:
   insert_value_in_taipei_table(spot) # insert taipei_table 
   photo_list = file_list(spot)
-  insert_value_in_photo(count, photo_list) #insert photo_file
-  print(count)
-  print(photo_list)
-  count+=1
- 
-def get_distinctMRT ():
-  mycursor = mydb.cursor()
-  MRT_List = []
-  mycursor.execute("SELECT DISTINCT MRT fROM taipei_attraction ")
-  result = mycursor.fetchall()
-  for MRT in result:
-    if MRT[0] == "None":
-      continue
-    else:
-      MRT_List.append(MRT[0])
-  return MRT_List
-
-def get_MRT_spot_NUM(MRT_List):
-  mycursor = mydb.cursor()
-  M_C_dict = {}
-  for MRT in MRT_List:
-    sql = "SELECT COUNT(*) fROM taipei_attraction WHERE MRT = %s"
-    val = (f"{MRT}",)
-    mycursor.execute(sql, val)
-    count_num = mycursor.fetchone()[0]
-    M_C_dict[f"{MRT}"] = count_num
-    # print(M_C_dict)
-  return M_C_dict
-    
-def insert_MRT_count(MRT_List, M_C_dict):
-  mycursor = mydb.cursor()
-  for MRT in MRT_List:
-    count = M_C_dict[f"{MRT}"]
-    sql = "INSERT INTO mrt_list(MRT_name, spot_count) values (%s, %s)"
-    val = (f"{MRT}",count)
-    print(f"{MRT}")
-    print(count)
-    mycursor.execute(sql, val)
-    print(mycursor.rowcount, "record inserted in mrt_List.")
-    mydb.commit()
-
-# create mrt_list_table    
-MRT_List= get_distinctMRT()
-print(MRT_List)
-M_C_dict = get_MRT_spot_NUM(MRT_List)
-insert_MRT_count(MRT_List, M_C_dict)
+  id = get_id (spot)
+  insert_value_in_photo(id, photo_list) #insert photo_file
 
 
 
