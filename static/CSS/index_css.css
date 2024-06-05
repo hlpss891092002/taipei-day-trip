@@ -166,9 +166,9 @@
 
     #attractions-display{
       display: grid;
-      gap: 30;
-      margin: 15px;
+      gap: 30px;
       grid-template-columns:  1fr 1fr 1fr 1fr;
+      padding: 0 15px;
     }
 
     .attraction-section{
@@ -223,13 +223,13 @@
 
     @media (max-width:1200px){
       #main-container {
-          padding: 40px 0 40px 0;
-          width: 90%;
+          padding: 40px 0px 40px 0px;
+          width: 100%;
       }
       #attractions-display {
+        padding:0 15px ;
         display: grid;
         grid-gap: 30px;
-        margin: 15px;
         grid-template-columns: 1fr 1fr 1fr;
       }
       .attraction-section {
@@ -244,16 +244,16 @@
       }
     }
 
-    @media (max-width:768px) {
+    @media (max-width:600px) {
       #main-container {
-            padding: 40px 0 40px 0;
-            width: 90%;
+            padding: 40px 0px 40px 0px;
+            width: 100%;
       }
       #attractions-display {
         display: grid;
         gap: 30;
-        margin: 15px;
         grid-template-columns: 1fr 1fr;
+        padding: 0 15px;
       }
       .attraction-section {
         display: flex;
@@ -276,15 +276,14 @@
 
     @media (max-width:540px) {
       #main-container {
-          padding: 40px 0 40px 0;
-          width: 90%;
+          padding: 40px 0px 40px 0px;
+          width: 100%;
        }
       #attractions-display {
         display: grid;
         grid-gap: 15px;
-        margin: 15px;
         grid-template-columns: 1fr ;
-
+        padding: 0 15px;
       }
       .attraction-section {
         display: flex;
