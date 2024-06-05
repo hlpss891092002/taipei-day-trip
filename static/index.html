@@ -4,8 +4,57 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Index</title>
+  <link rel="stylesheet" href="/static/CSS/index_css.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100..900&display=swap" rel="stylesheet">
 </head>
 <body>
-  
+  <nav class="navigation">
+    <div class="nav-bar">
+      <div class="nav-container">
+        <h2 class="nav-title">台北一日遊</h2>
+        <div class="user-position">
+          <div class="nav-user-btn trip-btn">預定行程</div>
+          <button class="nav-user-btn sign-btn">登入/註冊</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <section class="hero-section">
+    <div class="hero-section-container">
+      <!-- <div class="slogan"> -->
+        <h1 class="big-slogan">輕鬆享受台北一日悠閒</h1>
+        <p class="small-slogan">探索每個角落，體驗城市的深度旅遊行程</p>
+      <!-- </div> -->
+      <div class="search-bar">
+        <div class="search-input-div">
+          <input type="text" class="search-bar-input" placeholder="請輸入景點名稱查詢">
+        </div>
+        <button type="button" class="search-bar-btn"><img src="/static/img/icon_search.png" alt=""></button>
+      </div>
+    </div>
+  </section>
+  <section class="main">
+    <div id="main-container">
+      <nav class="list-bar">
+        <div class="left-container">
+          <img class="list-img" src="/static/img/Arrow_Left.png" alt="arrow-left">  
+        </div>
+        <div class="list-container">
+        </div>
+        <div class="right-container">
+          <img class="list-img " src="/static/img/Arrow_right.png" alt="arrow-right">
+        </div>
+      </nav>
+      <div id="attractions-display">
+      </div>
+    </div>
+  </section>
+  <div class="footer">
+    <span class="footer-text">COPYRIGHT © 2021 台北一日遊</span>
+  </div>
+<script src="/static/JS/index_js.js"></script>
 </body>
+
 </html>

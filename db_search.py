@@ -2,15 +2,25 @@ import mysql.connector
 import mysql.connector.pooling
 import json
 
-mydb = mysql.connector.connect(
-  host = "localhost",
-  user = "root",
-  password = "00000000",
-  database = "wehelp_stage2_taipei_spot",
+dbconfig = {
+    "host":"localhost",
+    "user":"root",
+    "password":"00000000",
+    "database":"wehelp_stage2_taipei_spot",
+}
+
+cnxpool = mysql.connector.pooling.MySQLConnectionPool(
+  pool_name="mypool",
+  pool_size=3,
+  **dbconfig
 )
 
+cnx1 = cnxpool.get_connection()
+
+
+
 def get_images (id):
-  mycursor = mydb.cursor(dictionary = True)
+  mycursor =cnx1.cursor(dictionary = True)
   photo_list = []
   sql = "select photo from photo_file where attraction_id = %s"
   val = (id, )
@@ -38,14 +48,14 @@ def load_attraction_data(result):
 
 def check_next_page_empty(page, keyword = None):
   if keyword is  None:
-    mycursor = mydb.cursor(dictionary = True)
+    mycursor = cnx1.cursor(dictionary = True)
     sql= "select * from taipei_attraction LIMIT %s, 12"
     val = ((page+1)*12,)
     mycursor.execute(sql, val)
     result = mycursor.fetchall()
     return (len(result) == 0)
   if keyword is not None:
-    mycursor = mydb.cursor(dictionary = True)
+    mycursor = cnx1.cursor(dictionary = True)
     sql = "SELECT * FROM taipei_attraction WHERE MRT = %s or name like %s LIMIT %s , 12"
     val = (keyword, f"%{keyword}%" ,(page+1)*12)
     mycursor.execute(sql, val)
@@ -62,7 +72,7 @@ def get_attraction_by_keyword_page(keyword = None, page = 0):
         else:
           response_joson["nextPage"] = page+1
         response_data_list = []
-        mycursor = mydb.cursor(dictionary = True)
+        mycursor = cnx1.cursor(dictionary = True)
         sql= "select * from taipei_attraction LIMIT %s, 12"
         val = (page*12,)
         mycursor.execute(sql,val)
@@ -79,7 +89,7 @@ def get_attraction_by_keyword_page(keyword = None, page = 0):
         else:
           response_joson["nextPage"] = page+1
         response_data_list = []
-        mycursor = mydb.cursor(dictionary = True)
+        mycursor = cnx1.cursor(dictionary = True)
         sql= "select * from taipei_attraction WHERE MRT = %s OR name Like %s  LIMIT %s, 12 "
         val = (keyword, f"%{keyword}%", page*12)
         mycursor.execute(sql,val)
@@ -96,7 +106,7 @@ def get_attraction_by_keyword_page(keyword = None, page = 0):
 def get_attraction_by_id(id):
   try:
     attraction_data={}
-    mycursor = mydb.cursor(dictionary = True)
+    mycursor = cnx1.cursor(dictionary = True)
     sql1= "select * from taipei_attraction where id = %s"
     val = (f"{id}",)
     mycursor.execute(sql1, val)
@@ -118,7 +128,7 @@ def get_attraction_by_id(id):
     return None 
 
 def get_MRT_ORDERBY_spot_count():
-  mycursor = mydb.cursor()
+  mycursor = cnx1.cursor()
   mrt_list = []
   sql = """SELECT MRT 
           FROM taipei_attraction
@@ -129,5 +139,7 @@ def get_MRT_ORDERBY_spot_count():
   result = mycursor.fetchall()
   for data in result:
     mrt = data[0]
-    mrt_list.append(mrt)
-  (mrt_list)  
+    if mrt != "None":
+      mrt_list.append(mrt)
+  return mrt_list  
+get_MRT_ORDERBY_spot_count()

@@ -39,7 +39,7 @@ mycursor.execute("""CREATE TABLE taipei_attraction(
 #create TABLE photo_file
 mycursor.execute("""CREATE TABLE photo_file(
                  id BIGINT AUTO_INCREMENT,
-                 attraction_id BIGINT,
+                 attraction_id BIGINT NOT NULL,
                  photo varchar(500),
                  PRIMARY KEY(id),
                  FOREIGN KEY photo_file(attraction_id) 	REFERENCES taipei_attraction(id)
@@ -75,11 +75,11 @@ def file_list(spot):
 
 def get_id (spot):
   name = spot["name"]
-  sql = "SELECT id FROM  taipei_attraction WHERE name =%s"
+  sql = "SELECT id FROM taipei_attraction WHERE name =%s"
   val = (name, )
   mycursor.execute(sql, val)
   id = mycursor.fetchone()[0]
-  print(id)
+  return id
 
 def insert_value_in_photo(id, photo_list):
   for photo in photo_list:

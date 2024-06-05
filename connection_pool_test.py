@@ -18,3 +18,6 @@ cnxpool = mysql.connector.pooling.MySQLConnectionPool(
 cnx1 = cnxpool.get_connection()
 
 mycursor = cnx1.cursor()
+mycursor.execute("select * from  taipei_attraction")
+result = mycursor.fetchall()
+print(result)

@@ -1,0 +1,305 @@
+    * {
+      margin: 0;
+      padding: 0;
+      font-family: "Noto Sans TC", sans-serif;
+      font-optical-sizing: auto;
+      font-size: 16px;
+      box-sizing: border-box;
+      font-weight: 700;
+      /* color:red; */
+    }
+    h2{
+      font-size: 30px;
+      font-weight: bold;
+    }
+    .nav-bar{
+      display: flex;
+      justify-content: center;
+    }
+    .nav-container{
+      width: 1200px;
+      height: 54px;
+      padding: 10px 15px 10px 15px ;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #ffffff;
+    }
+    .nav-title{
+      font-size: 30px;
+      width: 150px;
+      color: #448899;
+    }
+    
+    .user-position{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-user-btn{
+      height: 100%;
+      padding: 10px;
+      text-align: center;
+      vertical-align: top;
+      font-weight: 500;
+      border: none;
+      background-color: #ffffff;
+      color: #666666;
+    }
+
+    .hero-section {
+      width: 100%;
+      height: 320px;
+      background-image: url(../img/welcome_image.png);
+      background-repeat: no-repeat;
+      background-size: cover;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .hero-section-container{
+      width: 1180px;
+      height: 169px;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      color: #f8f8f8;
+    }
+
+    .slogan {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 78px;
+
+      font-weight: 700;
+    }
+
+    .big-slogan{
+      font-size: 28px;
+    }
+    .search-bar {
+      border-radius: 5px ;
+      display: flex;
+      width: 460;
+      height: 46px;
+      align-items: center;
+
+    }
+    .search-input-div{
+      height: 100%;
+    }
+    .search-bar input{
+      padding: 15px;
+      border-radius: 5px 0 0 5px;
+      height: 100%;
+      width: 400px;
+      border: none;
+      color: #757575; 
+    }
+    .search-bar button {
+      height: 100%;
+      width: 60px;
+      border: none;
+      background-color: #448899;
+      border-radius: 0 5px 5px 0 ;
+    }
+
+    .search-bar-btn img {
+      width: 30px;
+      height: 30px;
+    }
+    .main{
+      display: flex;
+      justify-content: center;
+    }
+  
+    #main-container{
+      padding: 40px 0 40px 0 ;
+      width: 1200px;
+    }
+
+    .list-bar{
+      width: 100%;
+      display: flex;
+      padding: 0 0 20px 0 ;
+    }
+
+    .left-container{
+      height: 50px;
+      padding: 9px 0px 9px 15px;
+      display: inline-block;
+    }
+    .right-container {
+      height: 50px;
+      padding: 9px 15px 9px 0px;
+      display: inline-block;
+    }
+
+    .list-img {
+      width: 32px;
+      height: 32px;
+      opacity: 50%;
+    }
+    .list-img:hover {
+      opacity: 100%;
+    }
+
+    .list-container{
+      height: 50px;
+      padding: 13px 10px 13px 10px;
+      flex: auto;
+      display: flex;
+      align-items: center;
+      overflow: auto hidden;
+      overflow-x: hidden;
+    }
+
+    .list-bar-item{
+      text-wrap: nowrap;
+      padding: 5px 15px 5px 15px;
+      font-weight: 500;
+    }
+
+    #attractions-display{
+      display: grid;
+      gap: 30;
+      margin: 15px;
+      grid-template-columns:  1fr 1fr 1fr 1fr;
+    }
+
+    .attraction-section{
+      display: flex;
+      flex-direction: column;
+      width: 270px;
+      height: 242px;
+      background-color: #ffffff;
+      border: solid 1px;
+      border-color: #e8e8e8;
+      border-radius: 5px;
+    }
+
+    .img-section {
+      width: 100%;
+      height: 197px;
+      background-repeat: no-repeat;
+      background-size: cover;
+      position: relative;
+    }
+    .img-section div{
+      width: 100%;
+      height: 40px;
+      background-color: rgba(0, 0, 0, 0.6);
+      position: absolute;
+      bottom: 0;
+      padding: 10px;
+      color: #ffffff;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-wrap: nowrap;
+
+    }
+    .details{
+      width: 100%;
+      flex: auto;
+      padding: 10px;
+      display: flex;
+      justify-content: space-between;
+      color: #757575;      
+    }
+
+    .footer{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 104px;
+      background-color: #757575;
+      color: #ffffff;
+    }
+
+    @media (max-width:1200px){
+      #main-container {
+          padding: 40px 0 40px 0;
+          width: 90%;
+      }
+      #attractions-display {
+        display: grid;
+        grid-gap: 30px;
+        margin: 15px;
+        grid-template-columns: 1fr 1fr 1fr;
+      }
+      .attraction-section {
+        display: flex;
+        flex-direction: column;
+        width: auto;
+        height: 242px;
+        background-color: #ffffff;
+        border: solid 1px;
+        border-color: #e8e8e8;
+        border-radius: 5px;
+      }
+    }
+
+    @media (max-width:768px) {
+      #main-container {
+            padding: 40px 0 40px 0;
+            width: 90%;
+      }
+      #attractions-display {
+        display: grid;
+        gap: 30;
+        margin: 15px;
+        grid-template-columns: 1fr 1fr;
+      }
+      .attraction-section {
+        display: flex;
+        flex-direction: column;
+        width: auto;
+        height: 242px;
+        background-color: #ffffff;
+        border: solid 1px;
+        border-color: #e8e8e8;
+        border-radius: 5px;
+      }
+      .search-bar input {
+        border-radius: 5px 0 0 5px;
+        height: 100%;
+        width: 225px;
+        border: none;
+        color: #757575;
+      }
+    }
+
+    @media (max-width:540px) {
+      #main-container {
+          padding: 40px 0 40px 0;
+          width: 90%;
+       }
+      #attractions-display {
+        display: grid;
+        grid-gap: 15px;
+        margin: 15px;
+        grid-template-columns: 1fr ;
+
+      }
+      .attraction-section {
+        display: flex;
+        flex-direction: column;
+        width: auto;
+        background-color: #ffffff;
+        border: solid 1px;
+        border-color: #e8e8e8;
+        border-radius: 5px;
+      }
+      .img-section {
+        width: 100%;
+        height: 235px;
+        background-repeat: no-repeat;
+        background-size: cover;
+        position: relative;
+      }
+    }

@@ -1,9 +1,10 @@
 from typing import List, Union
 from fastapi import *
 from fastapi.responses import FileResponse, JSONResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from db_search import get_MRT_ORDERBY_spot_count, get_attraction_by_id, get_attraction_by_keyword_page
-
+from db_search import *
 class error_message(BaseModel):
 	error:bool
 	message: str
@@ -26,6 +27,8 @@ error_message_400 = error_message(
 
 app= FastAPI()
 
+
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # Static Pages (Never Modify Code in this Block)
 @app.get("/", include_in_schema=False)
@@ -63,6 +66,7 @@ async def get_attraction_from_id(attractionId):
 		return JSONResponse(status_code=500, content=error_message_500.dict())
 @app.get("/api/mrts")
 async def get_mrt():
+	print (get_MRT_ORDERBY_spot_count())
 	try:
 			response_200 = mrts_response(
 				data = get_MRT_ORDERBY_spot_count()
