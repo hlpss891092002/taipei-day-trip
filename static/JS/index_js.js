@@ -166,7 +166,7 @@ listContainer.addEventListener("click", (e)=>{
 window.addEventListener("scroll",(e)=>{
   // console.log(document.body.offsetHeight)
   // console.log(window.scrollY)
-  if (window.innerHeight + Math.ceil(window.scrollY+1) >= document.body.offsetHeight){
+  if (window.innerHeight + Math.ceil(window.scrollY) >= document.body.offsetHeight){
     if (keyword && nextPage !== null){
       fetchAttraction(ATTRACTIONSAPI, nextPage, keyword)
     }else if(nextPage !== null){
