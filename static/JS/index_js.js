@@ -144,24 +144,21 @@ listContainer.addEventListener("click", (e)=>{
 //scroll to bottom load more data
 window.addEventListener("scroll",(e)=>{
   // console.log(document.body.offsetHeight)
-  // console.log(window.scrollY)
-  if (window.innerHeight + Math.ceil(window.scrollY) >= document.body.offsetHeight -300 ){
-    // try{
-      if(! loading){
-        if (keyword && nextPage !== null){
-        fetchAttraction(ATTRACTIONSAPI, nextPage, keyword);
-        }else if(nextPage !== null){
-          fetchAttraction(ATTRACTIONSAPI, nextPage);
+  // console.log(window.scrollY)      
+  if(! loading){
+    if (window.innerHeight + Math.ceil(window.scrollY) >= document.body.offsetHeight -300 ){
+      // try{
+
+          if (keyword && nextPage !== null){
+          fetchAttraction(ATTRACTIONSAPI, nextPage, keyword);
+          }else if(nextPage !== null){
+            fetchAttraction(ATTRACTIONSAPI, nextPage);
+          }else{
+            console.log("end of data");
+          };
         }else{
-          console.log("end of data");
-        };
-      }else{
-        return
+          return
       }
-      
-    // }catch{
-    //   console.log("error in line load page")
-    // }
   };
 });
 
