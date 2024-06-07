@@ -24,7 +24,6 @@ async function fetchAttraction(url, page = 0, keyword = ""){
   }catch{
     console.log("error in fetchAttraction");
   }finally{
-    console.log(console.log(attractions));
     loading = false
   };
 }
@@ -146,8 +145,8 @@ listContainer.addEventListener("click", (e)=>{
 window.addEventListener("scroll",(e)=>{
   // console.log(document.body.offsetHeight)
   // console.log(window.scrollY)
-  if (window.innerHeight + Math.ceil(window.scrollY) >= document.body.offsetHeight){
-    try{
+  if (window.innerHeight + Math.ceil(window.scrollY) >= document.body.offsetHeight -300 ){
+    // try{
       if(! loading){
         if (keyword && nextPage !== null){
         fetchAttraction(ATTRACTIONSAPI, nextPage, keyword);
@@ -156,11 +155,13 @@ window.addEventListener("scroll",(e)=>{
         }else{
           console.log("end of data");
         };
+      }else{
+        return
       }
       
-    }catch{
-      console.log("error in line load page")
-    }
+    // }catch{
+    //   console.log("error in line load page")
+    // }
   };
 });
 
