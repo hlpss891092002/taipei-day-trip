@@ -66,7 +66,6 @@ async def get_attraction_from_id(attractionId):
 		return JSONResponse(status_code=500, content=error_message_500.dict())
 @app.get("/api/mrts")
 async def get_mrt():
-	print (get_MRT_ORDERBY_spot_count())
 	try:
 			response_200 = mrts_response(
 				data = get_MRT_ORDERBY_spot_count()

@@ -2,8 +2,8 @@ import mysql.connector
 import json
 
 mydb = mysql.connector.connect(
-  host = "0.0.0.0",
-  user = "lucas",
+  host = "localhost",
+  user = "root",
   password = "00000000",
 )
 mycursor1 = mydb.cursor()
