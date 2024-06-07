@@ -1,3 +1,4 @@
+import logging
 from typing import List, Union
 from fastapi import *
 from fastapi.responses import FileResponse, JSONResponse
@@ -5,6 +6,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from db_search import *
+
 class error_message(BaseModel):
 	error:bool
 	message: str

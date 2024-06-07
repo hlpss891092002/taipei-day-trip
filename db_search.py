@@ -9,8 +9,8 @@ logging.basicConfig(filename="db_searchlogging", level=logging.DEBUG, format=log
 def connection():
   try:
     dbconfig = {
-        "host":"localhost",
-        "user":"root",
+        "host":"0.0.0.0",
+        "user":"lucas",
         "password":"00000000",
         "database":"wehelp_stage2_taipei_spot",
     }
@@ -22,7 +22,7 @@ def connection():
     cnx1 = cnxpool.get_connection()
     return cnx1
   except:
-    logging.info("database connection fail")
+    logging.warning("database connection fail")
 
 
 
@@ -40,7 +40,7 @@ def get_images (id):
       photo_list.append(photo["photo"])
     return photo_list
   except:
-    print("error in get image def")
+    logging.warning("error in get image def")
   finally:
     mycursor.close()
     cnx1.close()
@@ -79,7 +79,7 @@ def check_next_page_empty(page, keyword = None):
       result = mycursor.fetchall()
       return (len(result) == 0)
   except:
-    print("error in empty def")
+    logging.warning("error in empty def")
   finally:
     mycursor.close()
     cnx1.close()
@@ -125,6 +125,7 @@ def get_attraction_by_keyword_page(keyword = None, page = 0):
         return response_joson
     except:
       print("錯誤")
+      logging.warning("error in def get_attraction_by_keyword_pag")
       return None 
     finally:
       mycursor.close()
@@ -154,28 +155,32 @@ def get_attraction_by_id(id):
     attraction_data["images"] = photo_list
     return (attraction_data)
   except:
+    logging.log("error in get_attraction_by_keyword_page")
     return None
   finally:
     mycursor.close()
     cnx1.close() 
 
 def get_MRT_ORDERBY_spot_count():
-  cnx1 = connection()
-  mycursor = cnx1.cursor()
-  mrt_list = []
-  sql = """SELECT MRT 
-          FROM taipei_attraction
-          WHERE MRT IS NOT NULL
-          GROUP BY MRT
-          ORDER BY count(*) DESC"""
-  mycursor.execute(sql)
-  result = mycursor.fetchall()
-  mycursor.close()
-  cnx1.close()  
-  for data in result:
-    mrt = data[0]
-    if mrt != "None":
-      mrt_list.append(mrt)
-  return mrt_list
+  try:
+    cnx1 = connection()
+    mycursor = cnx1.cursor()
+    mrt_list = []
+    sql = """SELECT MRT 
+            FROM taipei_attraction
+            WHERE MRT IS NOT NULL
+            GROUP BY MRT
+            ORDER BY count(*) DESC"""
+    mycursor.execute(sql)
+    result = mycursor.fetchall()
+    mycursor.close()
+    cnx1.close()  
+    for data in result:
+      mrt = data[0]
+      if mrt != "None":
+        mrt_list.append(mrt)
+    return mrt_list
+  except:
+    logging.info("error in def MRT orderby")
  
 get_MRT_ORDERBY_spot_count()
