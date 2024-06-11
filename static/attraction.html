@@ -4,8 +4,92 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Attraction</title>
+  <link rel="stylesheet" href="/static/CSS/attraction_css.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100..900&display=swap" rel="stylesheet">
 </head>
 <body>
-  
+  <nav class="navigation">
+    <div class="nav-bar">
+      <div class="nav-container">
+        <a href="/">
+          <h2 class="nav-title">台北一日遊</h2>
+        </a>
+        <div class="user-position">
+          <div class="nav-user-btn trip-btn">預定行程</div>
+          <button class="nav-user-btn sign-btn">登入/註冊</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <hr>
+  <main>
+    <section class="main-container">
+      <section class="cover-section">
+        <div class="img-slideshow-container">
+            <img class="arrow-left " src="/static/img/Arrow_Left.png" alt="arrow-left">
+            <img class="arrow-right " src="/static/img/Arrow_right.png" alt="arrow-right">
+          <div class="img-count-container">
+            <button type="button" class="img-count-selected"></button>
+            <button type="button" class="img-count"></button>
+            <button type="button" class="img-count"></button>
+            <button type="button" class="img-count"></button>
+          </div>
+
+        </div>
+        <div class="profile">
+          <h3 class="profile-name">李濠</h3>
+          <p class="profile-Category-MRT">下車</p>
+          <div class="booking-form">
+            <div class="title">訂購導覽行程</div>
+            <div>以此景點為中心的一日行程，帶您探索城市角落故事</div>
+            <div class="booking-detail"></div>
+            <div class="profile-date-container">
+              <span class="title">選擇日期：</span>
+              <input type="datetime-local">
+            </div>
+            <div class="profile-time-container">
+              <div class="title">選擇時間：</div>
+              <div class="option first">
+                <button type="button" class="option-btn-selected"></button>
+                <span>上半天</span>
+              </div>
+              <div class="option second">
+                <button type="button" class="option-btn"></button>
+                <span>下半天</span>
+              </div>
+            </div>
+            <div class="profile-price-container">
+              <span class="title">導覽費用：</span>
+              <span class="profile-price">新台幣 2000元</span>
+            </div>
+            <button class="booking-btn">開始預約行程</button>
+          </div>
+        </div>
+      </section>
+      <div class="separator-container">
+        <hr class="separator">
+      </div>
+      <section class="info-section">
+        <div class="info-description-container">
+          <p class="info-description">跟我到天國去吧</p>
+        </div>
+        <div class="info-address-container">
+          <p class="info-address title">景點地址：</p>
+          <p class="info-address-content">天湯</p>
+        </div>
+        <div class="info-transport-container">
+          <p class="info-transport title">交通方式：</p>
+          <p class="info-transport-content">翅膀</p>
+        </div>
+
+      </section>
+    </section>
+  </main>
+  <div class="footer">
+    <span class="footer-text">COPYRIGHT © 2021 台北一日遊</span>
+  </div>
+  <script src="/static/JS/attraction_js.js"></script>
 </body>
 </html>

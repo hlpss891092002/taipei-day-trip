@@ -42,7 +42,11 @@ async function fetchMRTs(url){
 
 function createAttractionSection(attraction){
   let attractionSection  = document.createElement("div");
-  attractionSection.className = "attraction-section";
+  attractionSection.className = `attraction-section`;
+  let attractionPageUrl = document.createElement("a")
+  id = attraction["id"]
+  attractionPageUrl.className = id
+  attractionPageUrl.href = `/attraction/${attraction["id"]}`
   let imageSection = document.createElement("div");
   imageSection.className = "img-section";
   imageSection.style.backgroundImage = `url(${attraction["images"][0]})`;
@@ -60,7 +64,8 @@ function createAttractionSection(attraction){
   let attractionCategory = document.createElement("span");
   attractionCategory.className = "attraction-category";
   attractionCategory.innerText = attraction["category"];
-  attractionSection.appendChild(imageSection);
+  attractionSection.appendChild(attractionPageUrl)
+  attractionPageUrl.appendChild(imageSection);
   imageSection.appendChild(attractionName);
   attractionSection.appendChild(detail);
   detail.appendChild(MRT);
@@ -68,15 +73,15 @@ function createAttractionSection(attraction){
   attractionsDisplay.appendChild(attractionSection);
 };
 
-async function renderSection(attractions){
-  let attractionList = await attractions;
+function renderSection(attractions){
+  let attractionList = attractions;
   for (attraction of attractionList){
     createAttractionSection(attraction);
   };
 };
 
-async function renderMrtListBar(MRTData){
-  let MRTList = await MRTData;
+function renderMrtListBar(MRTData){
+  let MRTList = MRTData;
   for (MRT of MRTList){
     if (MRT !== null){
       let listBarItem = document.createElement("div");
