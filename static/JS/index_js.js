@@ -120,13 +120,18 @@ searchBarInput.addEventListener("input", (e)=>{
 })
 
 searchBarBTN.addEventListener("click", (e)=>{
-  // e.preventDefault()
   let inputValue = searchBarInput.value;
-  keyword = inputValue;
-  nextPage = 0;
-  console.log(keyword);
-  attractionsDisplay.replaceChildren();
-  fetchAttraction(ATTRACTIONSAPI, nextPage, keyword)
+  console.log(searchBarInput.value)
+  if(inputValue === ""){
+      e.preventDefault()
+  }else{
+    keyword = inputValue;
+    nextPage = 0;
+    console.log(keyword);
+    attractionsDisplay.replaceChildren();
+    fetchAttraction(ATTRACTIONSAPI, nextPage, keyword)
+  }
+  
 })
 
 //MRT list bar search 
