@@ -45,7 +45,7 @@ function createAttractionSection(attraction){
   attractionSection.className = `attraction-section`;
   let attractionPageUrl = document.createElement("a")
   id = attraction["id"]
-  attractionPageUrl.className = id
+  attractionPageUrl.className = "l"
   attractionPageUrl.href = `/attraction/${attraction["id"]}`
   let imageSection = document.createElement("div");
   imageSection.className = "img-section";
