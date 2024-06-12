@@ -1,34 +1,49 @@
 import mysql.connector
 import mysql.connector.pooling
 import json
+import logging
 
-dbconfig = {
-    "host":"0.0.0.0",
-    "user":"lucas",
-    "password":"00000000",
-    "database":"wehelp_stage2_taipei_spot",
-}
+logging_FORMAT = '%(asctime)s %(levelname)s : %(message)s %(funcName)s  %(lineo)d '
+logging.basicConfig(filename="db_searchlogging", level=logging.DEBUG, format=logging_FORMAT)
 
-cnxpool = mysql.connector.pooling.MySQLConnectionPool(
-  pool_name="mypool",
-  pool_size=3,
-  **dbconfig
-)
+def connection():
+  try:
+    dbconfig = {
+        "host":"0.0.0.0",
+        "user":"lucas",
+        "password":"00000000",
+        "database":"wehelp_stage2_taipei_spot",
+    }
+    cnxpool = mysql.connector.pooling.MySQLConnectionPool(
+      pool_name="mypool",
+      pool_size=3,
+      **dbconfig
+    )
+    cnx1 = cnxpool.get_connection()
+    return cnx1
+  except:
+    logging.warning("database connection fail")
 
-cnx1 = cnxpool.get_connection()
 
 
 
 def get_images (id):
-  mycursor =cnx1.cursor(dictionary = True)
-  photo_list = []
-  sql = "select photo from photo_file where attraction_id = %s"
-  val = (id, )
-  mycursor.execute(sql, val)
-  result = mycursor.fetchall()
-  for photo in result:
-    photo_list.append(photo["photo"])
-  return photo_list
+  try:
+    cnx1 = connection()
+    mycursor =cnx1.cursor(dictionary = True)
+    photo_list = []
+    sql = "select photo from photo_file where attraction_id = %s"
+    val = (id, )
+    mycursor.execute(sql, val)
+    result = mycursor.fetchall()
+    for photo in result:
+      photo_list.append(photo["photo"])
+    return photo_list
+  except:
+    logging.warning("error in get image def")
+  finally:
+    mycursor.close()
+    cnx1.close()
 
 
 def load_attraction_data(result):
@@ -47,24 +62,33 @@ def load_attraction_data(result):
   return attraction_data
 
 def check_next_page_empty(page, keyword = None):
-  if keyword is  None:
-    mycursor = cnx1.cursor(dictionary = True)
-    sql= "select * from taipei_attraction LIMIT %s, 12"
-    val = ((page+1)*12,)
-    mycursor.execute(sql, val)
-    result = mycursor.fetchall()
-    return (len(result) == 0)
-  if keyword is not None:
-    mycursor = cnx1.cursor(dictionary = True)
-    sql = "SELECT * FROM taipei_attraction WHERE MRT = %s or name like %s LIMIT %s , 12"
-    val = (keyword, f"%{keyword}%" ,(page+1)*12)
-    mycursor.execute(sql, val)
-    result = mycursor.fetchall()
-    return (len(result) == 0)
+  try:
+    cnx1 = connection()
+    if keyword is  None:
+      mycursor = cnx1.cursor(dictionary = True)
+      sql= "select * from taipei_attraction LIMIT %s, 12"
+      val = ((page+1)*12,)
+      mycursor.execute(sql, val)
+      result = mycursor.fetchall()
+      return (len(result) == 0)
+    if keyword is not None:
+      mycursor = cnx1.cursor(dictionary = True)
+      sql = "SELECT * FROM taipei_attraction WHERE MRT = %s or name like %s LIMIT %s , 12"
+      val = (keyword, f"%{keyword}%" ,(page+1)*12)
+      mycursor.execute(sql, val)
+      result = mycursor.fetchall()
+      return (len(result) == 0)
+  except:
+    logging.warning("error in empty def")
+  finally:
+    mycursor.close()
+    cnx1.close()
+
 
 
 def get_attraction_by_keyword_page(keyword = None, page = 0):
     try:
+      cnx1 = connection()
       if keyword  is None: #無關鍵字
         response_joson ={}
         if check_next_page_empty(page): #下一頁有無
@@ -101,10 +125,16 @@ def get_attraction_by_keyword_page(keyword = None, page = 0):
         return response_joson
     except:
       print("錯誤")
+      logging.warning("error in def get_attraction_by_keyword_pag")
       return None 
+    finally:
+      mycursor.close()
+      cnx1.close()
+
     
 def get_attraction_by_id(id):
   try:
+    cnx1 = connection()
     attraction_data={}
     mycursor = cnx1.cursor(dictionary = True)
     sql1= "select * from taipei_attraction where id = %s"
@@ -125,21 +155,32 @@ def get_attraction_by_id(id):
     attraction_data["images"] = photo_list
     return (attraction_data)
   except:
-    return None 
+    logging.log("error in get_attraction_by_keyword_page")
+    return None
+  finally:
+    mycursor.close()
+    cnx1.close() 
 
 def get_MRT_ORDERBY_spot_count():
-  mycursor = cnx1.cursor()
-  mrt_list = []
-  sql = """SELECT MRT 
-          FROM taipei_attraction
-          WHERE MRT IS NOT NULL
-          GROUP BY MRT
-          ORDER BY count(*) DESC"""
-  mycursor.execute(sql)
-  result = mycursor.fetchall()
-  for data in result:
-    mrt = data[0]
-    if mrt != "None":
-      mrt_list.append(mrt)
-  return mrt_list  
+  try:
+    cnx1 = connection()
+    mycursor = cnx1.cursor()
+    mrt_list = []
+    sql = """SELECT MRT 
+            FROM taipei_attraction
+            WHERE MRT IS NOT NULL
+            GROUP BY MRT
+            ORDER BY count(*) DESC"""
+    mycursor.execute(sql)
+    result = mycursor.fetchall()
+    mycursor.close()
+    cnx1.close()  
+    for data in result:
+      mrt = data[0]
+      if mrt != "None":
+        mrt_list.append(mrt)
+    return mrt_list
+  except:
+    logging.info("error in def MRT orderby")
+ 
 get_MRT_ORDERBY_spot_count()
