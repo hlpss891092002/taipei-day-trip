@@ -1,10 +1,10 @@
 const attractionArray = location.href.split("/");
 const attractionID = location.href.split("/")[attractionArray.length-1];
 const ImgSlideContainer = document.querySelector(".img-slideshow-container");
-const slideshowSliceContainer = document.querySelector(".slideshow-slice-container")
-const imgCountContainer = document.querySelector(".img-count-container")
-const arrowLeft = document.querySelector(".arrow-left")
-const arrowRight  = document.querySelector(".arrow-right")
+const slideshowSliceContainer = document.querySelector(".slideshow-slice-container");
+const imgCountContainer = document.querySelector(".img-count-container");
+const arrowLeft = document.querySelector(".arrow-left");
+const arrowRight  = document.querySelector(".arrow-right");
 const profileName = document.querySelector(".profile-name");
 const profileCategoryMRT = document.querySelector(".profile-Category-MRT");
 const infoDescription = document.querySelector(".info-description");
@@ -12,10 +12,10 @@ const infoAddressContent = document.querySelector(".info-address-content");
 const infoTransportContent = document.querySelector(".info-transport-content");
 const profileTimeContainer = document.querySelector(".profile-time-container");
 const profilePrice = document.querySelector(".profile-price");
-const imgCounts = imgCountContainer.childNodes
-const slices = slideshowSliceContainer.childNodes
-let imageNumber = null
-let sliceIndex = 0
+const imgCounts = imgCountContainer.childNodes;
+const slices = slideshowSliceContainer.childNodes;
+let imageNumber = null;
+let sliceIndex = 0;
 
 console.log(attractionID);
 fetchAttractionID(attractionID);
@@ -33,14 +33,14 @@ async function fetchAttractionID(id){
     infoDescription.innerText = attractionData["description"];
     infoAddressContent.innerText = attractionData["address"];
     infoTransportContent.innerText = attractionData["transport"];
-    let imagesArray = attractionData["images"]
-    imageNumber = imagesArray.length
+    let imagesArray = attractionData["images"];
+    imageNumber = imagesArray.length;
     for (url of imagesArray){
-      number = imagesArray.indexOf(url)
-      createImgCount(url, number)
-    }
+      number = imagesArray.indexOf(url);
+      createImgCount(url, number);
+    };
     imgCounts[sliceIndex].classList.add("selected");
-    slices[sliceIndex].classList.add("active")
+    slices[sliceIndex].classList.add("active");
   }catch{
     console.log("fetch fail");
   }finally{
@@ -52,14 +52,14 @@ async function fetchAttractionID(id){
 function createImgCount (url, number){
   let imgSection = document.createElement("div");
   imgSection.className = "slideshow-slice";
-  imgSection.classList.add("fade")
-  imgSection.style.backgroundImage = `url(${url})`
-  slideshowSliceContainer.appendChild(imgSection)
-  let imgCount = document.createElement("button")
-  imgCount.className = `img-count`
-  imgCount.classList.add(number)
+  imgSection.classList.add("fade");
+  imgSection.style.backgroundImage = `url(${url})`;
+  slideshowSliceContainer.appendChild(imgSection);
+  let imgCount = document.createElement("button");
+  imgCount.className = `img-count`;
+  imgCount.classList.add(number);
   imgCount.type = "button";
-  imgCountContainer.append(imgCount)
+  imgCountContainer.append(imgCount);
 };
 
 profileTimeContainer.addEventListener("click",(e)=>{
@@ -103,17 +103,17 @@ arrowRight.addEventListener("click", (e)=>{
 arrowLeft.addEventListener("click", (e)=>{
   try{
     if(sliceIndex === 0 ){
-    imgCounts[sliceIndex].className = "img-count";
+    imgCounts[sliceIndex].classList.remove("selected");
     slices[sliceIndex].classList.remove("active")
     sliceIndex = imageNumber - 1
-    imgCounts[sliceIndex].className = "img-count-active";
+    imgCounts[sliceIndex].classList.add("selected");
     slices[sliceIndex].classList.add("active")
   }else{
-    imgCounts[sliceIndex].className = "img-count";
+    imgCounts[sliceIndex].classList.remove("selected");
     slices[sliceIndex].classList.remove("active")
     sliceIndex -= 1
-    imgCounts[sliceIndex].className = "img-count-active";
-    slices[sliceIndex].classList.add("active")   
+    imgCounts[sliceIndex].classList.add("selected");
+    slices[sliceIndex].classList.add("active")  
   }
   }catch{
     console.log("arrowLeft listener error")
