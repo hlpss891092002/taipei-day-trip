@@ -16,6 +16,7 @@ const imgCounts = imgCountContainer.childNodes;
 const slices = slideshowSliceContainer.childNodes;
 let imageNumber = null;
 let sliceIndex = 0;
+let preloadImgArray = []
 
 console.log(attractionID);
 fetchAttractionID(attractionID);
@@ -36,6 +37,9 @@ async function fetchAttractionID(id){
     let imagesArray = attractionData["images"];
     imageNumber = imagesArray.length;
     for (url of imagesArray){
+      let preloadImg = new Image()
+      preloadImg.src = url
+      preloadImgList.push(preloadImg)  
       number = imagesArray.indexOf(url);
       createImgCount(url, number);
     };

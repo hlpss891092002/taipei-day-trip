@@ -14,6 +14,10 @@ class error_message(BaseModel):
 class attractionId_response(BaseModel):
 	data: dict
 
+class attractions_response(BaseModel):
+	nextPage: Union[int, None]
+	data: list
+
 class mrts_response(BaseModel):
 	data: list
 
@@ -50,9 +54,18 @@ async def thankyou(request: Request):
 @app.get("/api/attractions")
 async def get_attraction(keyword: str = None, page: int = 0):
 	try:
-		return  get_attraction_by_keyword_page(keyword, page)
+		nextPage = check_next_page_empty(keyword, page)
+		data = get_attraction_by_keyword_page(keyword, page)
+		print(type(nextPage))
+		print(type(data))
+		attractions_200 = attractions_response(
+			nextPage = nextPage,
+			data= data
+		)
+		return attractions_200
 	except:
 		return JSONResponse(status_code=500, content=error_message_500.dict())
+	
 @app.get("/api/attraction/{attractionId}")
 async def get_attraction_from_id(attractionId):
 	try:
