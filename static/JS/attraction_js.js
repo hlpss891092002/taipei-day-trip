@@ -39,7 +39,7 @@ async function fetchAttractionID(id){
     for (url of imagesArray){
       let preloadImg = new Image()
       preloadImg.src = url
-      preloadImgList.push(preloadImg)  
+      preloadImgArray.push(preloadImg)  
       number = imagesArray.indexOf(url);
       createImgCount(url, number);
     };

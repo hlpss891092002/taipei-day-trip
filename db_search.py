@@ -24,7 +24,6 @@ def connection():
   except:
     logging.warning("database connection fail")
 
-
 def check_next_page_empty(keyword = None, page = 0):
   try:
     cnx1 = connection()
@@ -53,8 +52,6 @@ def check_next_page_empty(keyword = None, page = 0):
   finally:
     mycursor.close()
     cnx1.close()
-
-
 
 def get_attraction_by_keyword_page(keyword = None, page = 0):
     try:
@@ -97,8 +94,7 @@ def get_attraction_by_keyword_page(keyword = None, page = 0):
     finally:
       mycursor.close()
       cnx1.close()
-
-    
+ 
 def get_attraction_by_id(id):
   try:
     cnx1 = connection()
@@ -117,7 +113,6 @@ def get_attraction_by_id(id):
     for image in image_list:
       result["images"].append(image["photo"])
     return result
-    
     
   except:
     logging.log("error in get_attraction_by_keyword_page")
