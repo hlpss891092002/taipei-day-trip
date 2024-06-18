@@ -1,22 +1,28 @@
+import {appendMask, appendMemberPage, insertSignInPage, insertSignUpPage, BtnEvent, submitEvent, addMemberInPageListener} from "../common/member_login_signin.js"
+import {switchNavToSignedIn, switchNavToUnsigned}from "../common/nav_member_state.js"
+import {getUserDataFromAuthAPI} from "../common/fetch_get_member_auth.js"
+
 const leftContainer = document.querySelector(".left-container");
 const rightContainer = document.querySelector(".right-container");
 const listContainer = document.querySelector(".list-container");
 const attractionsDisplay = document.getElementById("attractions-display");
 const searchBarInput = document.querySelector(".search-bar-input");
-const searchBarBTN =document.querySelector(".search-bar-btn");
+const searchBarBTN = document.querySelector(".search-bar-btn");
+
+
 const ATTRACTIONSAPI = "/api/attractions";
 const  MRTSAPI = "/api/mrts";
 let attractions = null;
 let MRTData = null;
 let nextPage = null;
 let keyword = null;
-let loading = false
+let loading = false;
 
 async function fetchAttraction(url, page = 0, keyword = ""){
   try{
       loading =true
       const response = await fetch(`${url}?keyword=${keyword}&page=${page}`);
-      rawData = await response.json();
+      let rawData = await response.json();
       attractions = await rawData["data"];
       nextPage = await rawData["nextPage"];
       renderSection(attractions);
@@ -24,29 +30,28 @@ async function fetchAttraction(url, page = 0, keyword = ""){
   }catch{
     console.log("error in fetchAttraction");
   }finally{
-    loading = false
+    loading = false;
   };
-}
+};
 
 async function fetchMRTs(url){
   try{
     const response = await fetch(`${url}`);
-    rawData = await response.json();
-    MRTData = await rawData["data"];
+    let rawData = await response.json();
+    let MRTData = await rawData["data"];
     renderMrtListBar(MRTData);
   }catch{
     console.log(console.log("error in fetchMRTS"));
-  }
-  
-}
+  };
+};
 
 function createAttractionSection(attraction){
   let attractionSection  = document.createElement("div");
   attractionSection.className = `attraction-section`;
-  let attractionPageUrl = document.createElement("a")
-  id = attraction["id"]
-  attractionPageUrl.className = "l"
-  attractionPageUrl.href = `/attraction/${attraction["id"]}`
+  let attractionPageUrl = document.createElement("a");
+  let id = attraction["id"];
+  attractionPageUrl.className = "l";
+  attractionPageUrl.href = `/attraction/${attraction["id"]}`;
   let imageSection = document.createElement("div");
   imageSection.className = "img-section";
   imageSection.style.backgroundImage = `url(${attraction["images"][0]})`;
@@ -75,14 +80,14 @@ function createAttractionSection(attraction){
 
 function renderSection(attractions){
   let attractionList = attractions;
-  for (attraction of attractionList){
+  for (let attraction of attractionList){
     createAttractionSection(attraction);
   };
 };
 
 function renderMrtListBar(MRTData){
   let MRTList = MRTData;
-  for (MRT of MRTList){
+  for (let MRT of MRTList){
     if (MRT !== null){
       let listBarItem = document.createElement("div");
       listBarItem.className = "list-bar-item";
@@ -91,9 +96,22 @@ function renderMrtListBar(MRTData){
       };
     };
   };
+//load page identified token
+async function initialPage(){
+  let state = await getUserDataFromAuthAPI()
+   if(state){
+      switchNavToSignedIn()
+    }else{
+      switchNavToUnsigned() 
+    }
+    fetchAttraction(ATTRACTIONSAPI);
+    fetchMRTs(MRTSAPI);
+}
 
-fetchAttraction(ATTRACTIONSAPI);
-fetchMRTs(MRTSAPI);
+window.addEventListener("load", (e)=>{
+    initialPage()
+    addMemberInPageListener()
+});
 
 // MRT bar
 leftContainer.addEventListener("click", (e)=>{
@@ -129,10 +147,9 @@ searchBarBTN.addEventListener("click", (e)=>{
     nextPage = 0;
     console.log(keyword);
     attractionsDisplay.replaceChildren();
-    fetchAttraction(ATTRACTIONSAPI, nextPage, keyword)
-  }
-  
-})
+    fetchAttraction(ATTRACTIONSAPI, nextPage, keyword);
+  };
+});
 
 //MRT list bar search 
 listContainer.addEventListener("click", (e)=>{
@@ -153,12 +170,8 @@ listContainer.addEventListener("click", (e)=>{
 
 //scroll to bottom load more data
 window.addEventListener("scroll",(e)=>{
-  // console.log(document.body.offsetHeight)
-  // console.log(window.scrollY)      
   if(! loading){
     if (window.innerHeight + Math.ceil(window.scrollY) >= document.body.offsetHeight -300 ){
-      // try{
-
           if (keyword && nextPage !== null){
           fetchAttraction(ATTRACTIONSAPI, nextPage, keyword);
           }else if(nextPage !== null){
@@ -171,4 +184,12 @@ window.addEventListener("scroll",(e)=>{
       }
   };
 });
+
+
+
+
+
+
+
+
 

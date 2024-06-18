@@ -2,6 +2,7 @@ import mysql.connector
 import mysql.connector.pooling
 import json
 import logging
+import jwt
 
 logging_FORMAT = '%(asctime)s %(levelname)s : %(message)s %(funcName)s  %(lineo)d '
 logging.basicConfig(filename="db_searchlogging", level=logging.DEBUG, format=logging_FORMAT)
@@ -9,14 +10,14 @@ logging.basicConfig(filename="db_searchlogging", level=logging.DEBUG, format=log
 def connection():
   try:
     dbconfig = {
-        "host":"0.0.0.0",
-        "user":"lucas",
+        "host":"localhost",
+        "user":"root",
         "password":"00000000",
         "database":"wehelp_stage2_taipei_spot",
     }
     cnxpool = mysql.connector.pooling.MySQLConnectionPool(
       pool_name="mypool",
-      pool_size=3,
+      pool_size=32,
       **dbconfig
     )
     cnx1 = cnxpool.get_connection()
@@ -25,8 +26,8 @@ def connection():
     logging.warning("database connection fail")
 
 def check_next_page_empty(keyword = None, page = 0):
+  cnx1 = connection()
   try:
-    cnx1 = connection()
     if keyword is  None:
       mycursor = cnx1.cursor(dictionary = True)
       sql= "select id from taipei_attraction LIMIT %s, 13"
@@ -54,10 +55,10 @@ def check_next_page_empty(keyword = None, page = 0):
     cnx1.close()
 
 def get_attraction_by_keyword_page(keyword = None, page = 0):
+    cnx1 = connection()
+    mycursor = cnx1.cursor(dictionary = True)
     try:
-      cnx1 = connection()
       if keyword  is None: #無關鍵字
-        mycursor = cnx1.cursor(dictionary = True)
         sql= """
         SELECT taipei_attraction.id, name, CAT as category, description, address, direction as transport, mrt, ROUND(latitude) as lat, ROUND(longitude) as lng, group_concat(photo) as images  FROM taipei_attraction 
         JOIN photo_file 
@@ -73,7 +74,6 @@ def get_attraction_by_keyword_page(keyword = None, page = 0):
 
       elif keyword is not None: #有關鍵字
         response_data_list = []
-        mycursor = cnx1.cursor(dictionary = True)
         sql= """ SELECT taipei_attraction.id, name, CAT as category, description, address, direction as transport, mrt, ROUND(latitude) as lat, ROUND(longitude) as lng, group_concat(photo) as images  
         FROM taipei_attraction 
         JOIN photo_file 
@@ -96,10 +96,10 @@ def get_attraction_by_keyword_page(keyword = None, page = 0):
       cnx1.close()
  
 def get_attraction_by_id(id):
+  cnx1 = connection()
+  mycursor = cnx1.cursor(dictionary = True)
   try:
-    cnx1 = connection()
     # attraction_data={}
-    mycursor = cnx1.cursor(dictionary = True)
     sql1= """SELECT id, name, CAT as category, description, address, direction as transport, mrt, ROUND(latitude) as lat, ROUND(longitude) as lng  FROM taipei_attraction  WHERE id = %s"""
     sql_photo = """SELECT photo FROM photo_file 
     WHERE attraction_id = %s"""
@@ -108,7 +108,6 @@ def get_attraction_by_id(id):
     result = mycursor.fetchone()
     mycursor.execute(sql_photo, val)
     image_list = mycursor.fetchall()
-    print(image_list)
     result["images"] = []
     for image in image_list:
       result["images"].append(image["photo"])
@@ -122,9 +121,9 @@ def get_attraction_by_id(id):
     cnx1.close() 
 
 def get_MRT_ORDERBY_spot_count():
+  cnx1 = connection()
+  mycursor = cnx1.cursor()
   try:
-    cnx1 = connection()
-    mycursor = cnx1.cursor()
     mrt_list = []
     sql = """SELECT MRT 
             FROM taipei_attraction
@@ -133,8 +132,6 @@ def get_MRT_ORDERBY_spot_count():
             ORDER BY count(*) DESC"""
     mycursor.execute(sql)
     result = mycursor.fetchall()
-    mycursor.close()
-    cnx1.close()  
     for data in result:
       mrt = data[0]
       if mrt != "None":
@@ -142,3 +139,6 @@ def get_MRT_ORDERBY_spot_count():
     return mrt_list
   except:
     logging.info("error in def MRT orderby")
+  finally:
+    mycursor.close()
+    cnx1.close() 
