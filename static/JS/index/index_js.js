@@ -98,14 +98,15 @@ function renderMrtListBar(MRTData){
   };
 //load page identified token
 async function initialPage(){
+  fetchAttraction(ATTRACTIONSAPI);
+  fetchMRTs(MRTSAPI);
   let state = await getUserDataFromAuthAPI()
    if(state){
       switchNavToSignedIn()
     }else{
       switchNavToUnsigned() 
     }
-    fetchAttraction(ATTRACTIONSAPI);
-    fetchMRTs(MRTSAPI);
+
 }
 
 window.addEventListener("load", (e)=>{

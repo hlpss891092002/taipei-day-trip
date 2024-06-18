@@ -27,9 +27,10 @@ def connection():
 
 def check_next_page_empty(keyword = None, page = 0):
   cnx1 = connection()
+  mycursor = cnx1.cursor(dictionary = True)
   try:
     if keyword is  None:
-      mycursor = cnx1.cursor(dictionary = True)
+
       sql= "select id from taipei_attraction LIMIT %s, 13"
       val = ((page)*12,)
       mycursor.execute(sql, val)
@@ -39,7 +40,6 @@ def check_next_page_empty(keyword = None, page = 0):
       else:
         return None
     if keyword is not None:
-      mycursor = cnx1.cursor(dictionary = True)
       sql = "SELECT * FROM taipei_attraction WHERE MRT = %s or name like %s LIMIT %s , 13"
       val = (keyword, f"%{keyword}%" ,(page)*12)
       mycursor.execute(sql, val)
@@ -99,7 +99,6 @@ def get_attraction_by_id(id):
   cnx1 = connection()
   mycursor = cnx1.cursor(dictionary = True)
   try:
-    # attraction_data={}
     sql1= """SELECT id, name, CAT as category, description, address, direction as transport, mrt, ROUND(latitude) as lat, ROUND(longitude) as lng  FROM taipei_attraction  WHERE id = %s"""
     sql_photo = """SELECT photo FROM photo_file 
     WHERE attraction_id = %s"""
@@ -122,8 +121,8 @@ def get_attraction_by_id(id):
 
 def get_MRT_ORDERBY_spot_count():
   cnx1 = connection()
-  mycursor = cnx1.cursor()
   try:
+    mycursor = cnx1.cursor()
     mrt_list = []
     sql = """SELECT MRT 
             FROM taipei_attraction

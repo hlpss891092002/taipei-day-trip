@@ -17,7 +17,7 @@ def connection():
     cnx1 = cnxpool.get_connection()
     return cnx1
   except:
-    print("db connection fail")
+    print("db connection fail in db_create_member_page")
 
 def createMemberTable():
   con = connection()
@@ -37,6 +37,5 @@ def createMemberTable():
   finally:
     con.close()
     cursor.close()
-  pass
 
-createMemberTable()
+# createMemberTable()

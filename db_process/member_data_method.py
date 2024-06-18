@@ -19,13 +19,13 @@ def connection():
     cnx1 = cnxpool.get_connection()
     return cnx1
   except:
-    print("db connection fail")
+    print("db connection fail in member_data_method")
 
 
 def add_member(name, email, password):
   con = connection()
   cursor = con.cursor(dictionary = True)
-  try: 
+  try:
     sql_search ="""SELECT email from member_table WHERE email = %s"""
     val_search = (email,)
     cursor.execute(sql_search,val_search)
@@ -45,8 +45,8 @@ def add_member(name, email, password):
   except:
     print("fail to add member")
   finally:
-    con.close()
     cursor.close()
+    con.close()
 
 def signin(email, password):
   con = connection()
