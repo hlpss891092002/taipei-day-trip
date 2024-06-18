@@ -6,8 +6,8 @@ import json
 def connection():
   try:
     dbconfig = {
-        "host":"localhost",
-        "user":"root",
+        "host":"0.0.0.0",
+        "user":"lucas",
         "password":"00000000",
         "database":"wehelp_stage2_taipei_spot",
     }
