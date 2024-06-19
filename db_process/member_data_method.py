@@ -1,14 +1,15 @@
 import mysql.connector
 import mysql.connector.pooling
 import json
-
+import os
+from dotenv import load_dotenv
 
 def connection():
   try:
     dbconfig = {
-        "host":"0.0.0.0",
-        "user":"lucas",
-        "password":"00000000",
+        "host": os.getenv("DBHOST"),
+        "user": os.getenv("DBUSER"),
+        "password": os.getenv("DBPASSWORD"),
         "database":"wehelp_stage2_taipei_spot",
     }
     cnxpool = mysql.connector.pooling.MySQLConnectionPool(

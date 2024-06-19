@@ -1,18 +1,20 @@
 import mysql.connector
 import mysql.connector.pooling
-import json
 import logging
-import jwt
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 logging_FORMAT = '%(asctime)s %(levelname)s : %(message)s %(funcName)s  %(lineo)d '
-logging.basicConfig(filename="db_searchlogging", level=logging.DEBUG, format=logging_FORMAT)
+logging.basicConfig(filename="db_searchlogg.log", level=logging.DEBUG, format=logging_FORMAT)
 
 def connection():
   try:
     dbconfig = {
-        "host":"0.0.0.0",
-        "user":"lucas",
-        "password":"00000000",
+        "host": os.getenv("DBHOST"),
+        "user": os.getenv("DBUSER"),
+        "password": os.getenv("DBPASSWORD"),
         "database":"wehelp_stage2_taipei_spot",
     }
     cnxpool = mysql.connector.pooling.MySQLConnectionPool(
