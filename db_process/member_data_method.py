@@ -76,5 +76,3 @@ def check_member(id, email):
   finally:
     con.close()
     cursor.close()
-
-add_member("123", "123", "123")
