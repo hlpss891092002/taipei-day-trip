@@ -13,7 +13,7 @@ def connection():
     }
     cnxpool = mysql.connector.pooling.MySQLConnectionPool(
       pool_name="mypool",
-      pool_size=32,
+      pool_size=3,
       **dbconfig
     )
     cnx1 = cnxpool.get_connection()
@@ -30,7 +30,6 @@ def add_member(name, email, password):
     val_search = (email,)
     cursor.execute(sql_search,val_search)
     result = cursor.fetchone()
-    # print(result)
     if result == None :
       sql_add ="""INSERT INTO member_table(name, email, password)
       VALUES(%s, %s, %s)
@@ -58,7 +57,7 @@ def signin(email, password):
     result = cursor.fetchone()
     return result
   except:
-    print("fail to add member")
+    print("member is not exist")
   finally:
     con.close()
     cursor.close()
@@ -77,3 +76,5 @@ def check_member(id, email):
   finally:
     con.close()
     cursor.close()
+
+add_member("123", "123", "123")
