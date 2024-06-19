@@ -17,7 +17,7 @@ def connection():
     }
     cnxpool = mysql.connector.pooling.MySQLConnectionPool(
       pool_name="mypool",
-      pool_size=32,
+      pool_size=3,
       **dbconfig
     )
     cnx1 = cnxpool.get_connection()
@@ -25,68 +25,52 @@ def connection():
   except:
     logging.warning("database connection fail")
 
-def check_next_page_empty(keyword = None, page = 0):
-  cnx1 = connection()
-  mycursor = cnx1.cursor(dictionary = True)
-  try:
-    if keyword is  None:
-
-      sql= "select id from taipei_attraction LIMIT %s, 13"
-      val = ((page)*12,)
-      mycursor.execute(sql, val)
-      result = mycursor.fetchall()
-      if len(result) > 12:
-        return  page + 1
-      else:
-        return None
-    if keyword is not None:
-      sql = "SELECT * FROM taipei_attraction WHERE MRT = %s or name like %s LIMIT %s , 13"
-      val = (keyword, f"%{keyword}%" ,(page)*12)
-      mycursor.execute(sql, val)
-      result = mycursor.fetchall()
-      if len(result) > 12:
-        return  page + 1
-      else:
-        return None
-  except:
-    logging.warning("error in empty def")
-  finally:
-    mycursor.close()
-    cnx1.close()
-
 def get_attraction_by_keyword_page(keyword = None, page = 0):
     cnx1 = connection()
     mycursor = cnx1.cursor(dictionary = True)
+    response_data = {}
     try:
       if keyword  is None: #無關鍵字
         sql= """
         SELECT taipei_attraction.id, name, CAT as category, description, address, direction as transport, mrt, ROUND(latitude) as lat, ROUND(longitude) as lng, group_concat(photo) as images  FROM taipei_attraction 
         JOIN photo_file 
         ON  photo_file.attraction_id = taipei_attraction.id
-        group by taipei_attraction.id  limit %s, 12
+        group by taipei_attraction.id  limit %s, 13
         """
         val = (page*12,)
         mycursor.execute(sql,val)
         attraction_data_list = mycursor.fetchall()
         for attraction in attraction_data_list:
           attraction["images"] = attraction["images"].split(",")
-        return attraction_data_list
-
+        if(len(attraction_data_list) == 13):
+          del attraction_data_list[12]
+          response_data["nextPage"] = page+1
+          response_data["data"] = attraction_data_list
+        else:
+          response_data["nextPage"] = None
+          response_data["data"] = attraction_data_list
+        return response_data
       elif keyword is not None: #有關鍵字
-        response_data_list = []
         sql= """ SELECT taipei_attraction.id, name, CAT as category, description, address, direction as transport, mrt, ROUND(latitude) as lat, ROUND(longitude) as lng, group_concat(photo) as images  
         FROM taipei_attraction 
         JOIN photo_file 
         ON  photo_file.attraction_id = taipei_attraction.id
         WHERE MRT = %s OR name Like %s
         group by taipei_attraction.id 
-        LIMIT %s, 12 """
+        LIMIT %s, 13 """
         val = (keyword, f"%{keyword}%", page*12)
         mycursor.execute(sql,val)
         attraction_data_list = mycursor.fetchall()
         for attraction in attraction_data_list:
           attraction["images"] = attraction["images"].split(",")
-        return attraction_data_list
+        if(len(attraction_data_list) == 13):
+          del attraction_data_list[12]
+          response_data["nextPage"] = page+1
+          response_data["data"] = attraction_data_list
+        else:
+          response_data["nextPage"] = None
+          response_data["data"] = attraction_data_list
+        return response_data
     except:
       print("錯誤")
       logging.warning("error in def get_attraction_by_keyword_pag")
@@ -121,8 +105,8 @@ def get_attraction_by_id(id):
 
 def get_MRT_ORDERBY_spot_count():
   cnx1 = connection()
+  mycursor = cnx1.cursor()
   try:
-    mycursor = cnx1.cursor()
     mrt_list = []
     sql = """SELECT MRT 
             FROM taipei_attraction

@@ -11,7 +11,7 @@ def connection():
     }
     cnxpool = mysql.connector.pooling.MySQLConnectionPool(
       pool_name="mypool",
-      pool_size=32,
+      pool_size=3,
       **dbconfig
     )
     cnx1 = cnxpool.get_connection()
@@ -38,4 +38,4 @@ def createMemberTable():
     con.close()
     cursor.close()
 
-# createMemberTable()
+createMemberTable()

@@ -1,4 +1,4 @@
-import {appendMask, appendMemberPage, insertSignInPage, insertSignUpPage, BtnEvent, submitEvent, addMemberInPageListener} from "../common/member_login_signin.js"
+import {appendMask, appendMemberPage, insertSignInPage, insertSignUpPage, BtnEvent, submitEvent, addMemberInPageListener} from "../common/member_sign_page.js"
 import {switchNavToSignedIn, switchNavToUnsigned}from "../common/nav_member_state.js"
 import {getUserDataFromAuthAPI} from "../common/fetch_get_member_auth.js"
 

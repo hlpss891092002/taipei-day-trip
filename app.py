@@ -68,11 +68,10 @@ async def thankyou(request: Request):
 @app.get("/api/attractions")
 async def get_attraction(keyword: str = None, page: int = 0):
 	try:
-		nextPage = check_next_page_empty(keyword, page)
 		data = get_attraction_by_keyword_page(keyword, page)
 		attractions_200 = attractions_response(
-			nextPage = nextPage,
-			data= data
+			nextPage = data["nextPage"],
+			data= data["data"]
 		)
 		return attractions_200
 	except:

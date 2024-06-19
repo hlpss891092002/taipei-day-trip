@@ -1,7 +1,8 @@
 import {insertInfoData} from "./info.js"
 import {profile} from "./cover_section_profile.js"
 import {insertSliceImage, sliceLeft, sliceRight, selectCount} from "./cover_section_slideshow.js"
-import {appendMask, appendMemberPage, insertSignInPage, insertSignUpPage, BtnEvent, submitEvent, addMemberInPageListener} from "../common/member_login_signin.js"
+import {appendMask, appendMemberPage, insertSignInPage, insertSignUpPage, BtnEvent, submitEvent, addMemberInPageListener} from "../common/member_sign_page.js"
+import {fetchAttractionAPI} from "../common/fetch_api_location_path.js"
 import {switchNavToSignedIn, switchNavToUnsigned}from "../common/nav_member_state.js"
 import {getUserDataFromAuthAPI} from "../common/fetch_get_member_auth.js"
 
@@ -18,6 +19,11 @@ let imageNumber = null
 let sliceIndex = 0;
 
 async function initialPage(){
+  const url = `/api${window.location.pathname}`
+  const attractionData = await fetchAttractionAPI(url)
+  insertInfoData(attractionData)
+  imageNumber = insertSliceImage(attractionData)
+  profile.insertProfile(attractionData)
   let state = await getUserDataFromAuthAPI()
    if(state){
       switchNavToSignedIn()
@@ -26,16 +32,11 @@ async function initialPage(){
     }
 }
 
-async function loadData () {
-  insertInfoData()
-  profile.insertProfile()
-  imageNumber = await insertSliceImage()
-}
 
-window.addEventListener("load", ()=>{
+window.addEventListener("load", ()=>{ 
     initialPage()
     addMemberInPageListener()
-    loadData ()
+    
 });
 
 profileTimeContainer.addEventListener("click", (e)=>{

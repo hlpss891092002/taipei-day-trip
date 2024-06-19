@@ -2,11 +2,9 @@ import {fetchAttractionAPI} from "../common/fetch_api_location_path.js"
 
 
 
-const  insertProfile = async function () {
+const  insertProfile = async function (attractionData) {
   const profileName = document.querySelector(".profile-name");
   const profileCategoryMRT = document.querySelector(".profile-Category-MRT");
-  const url = `/api${window.location.pathname}`;
-  const attractionData = await fetchAttractionAPI(url);
   const{name, category, mrt} =  attractionData;
   profileName.innerText = name;
   profileCategoryMRT.innerText = `${category} at ${mrt}`;

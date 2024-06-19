@@ -9,9 +9,7 @@ let imageNumber = null
 let sliceIndex = 0;
 let preloadImgArray = []
 
- export async function insertSliceImage(){
-  const url = `/api${window.location.pathname}`;
-  const attractionData = await fetchAttractionAPI(url);
+ export async function insertSliceImage(attractionData){
   const {images} = attractionData;
   let imagesArray = images;
   imageNumber = imagesArray.length;
