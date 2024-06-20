@@ -1,7 +1,5 @@
-import mysql.connector
-import mysql.connector.pooling
 import logging
-import os
+from model.db_connection import *
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -9,23 +7,6 @@ load_dotenv()
 logging_FORMAT = '%(asctime)s %(levelname)s : %(message)s %(funcName)s  %(lineo)d '
 logging.basicConfig(filename="db_searchlogg.log", level=logging.DEBUG, format=logging_FORMAT)
 
-def connection():
-  try:
-    dbconfig = {
-        "host": os.getenv("DBHOST"),
-        "user": os.getenv("DBUSER"),
-        "password": os.getenv("DBPASSWORD"),
-        "database":"wehelp_stage2_taipei_spot",
-    }
-    cnxpool = mysql.connector.pooling.MySQLConnectionPool(
-      pool_name="mypool",
-      pool_size=3,
-      **dbconfig
-    )
-    cnx1 = cnxpool.get_connection()
-    return cnx1
-  except:
-    logging.warning("database connection fail")
 
 def get_attraction_by_keyword_page(keyword = None, page = 0):
     cnx1 = connection()

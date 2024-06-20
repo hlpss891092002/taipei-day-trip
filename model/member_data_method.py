@@ -1,8 +1,4 @@
-import mysql.connector
-import mysql.connector.pooling
-import json
-import os
-from dotenv import load_dotenv
+from model.db_connection import *
 
 def connection():
   try:
