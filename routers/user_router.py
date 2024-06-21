@@ -2,8 +2,8 @@ import jwt
 from fastapi import *
 from fastapi.responses import JSONResponse
 from datetime import *
-from  model.member_data_method import *
-from view.response_classes import *
+from  db.member_data_method import *
+from data_class.response_classes import *
 
 
 router = APIRouter()

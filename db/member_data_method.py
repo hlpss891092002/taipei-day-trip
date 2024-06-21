@@ -1,4 +1,4 @@
-from model.db_connection import *
+from db.db_connection import *
 
 def connection():
   try:
@@ -17,7 +17,6 @@ def connection():
     return cnx1
   except:
     print("db connection fail in member_data_method")
-
 
 def add_member(name, email, password):
   con = connection()

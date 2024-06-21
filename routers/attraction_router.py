@@ -1,7 +1,7 @@
 from fastapi import *
 from fastapi.responses import  JSONResponse
-from model.attraction_db_method import *
-from view.response_classes import *
+from db.attraction_db_method import *
+from data_class.response_classes import *
 
 router = APIRouter()
 

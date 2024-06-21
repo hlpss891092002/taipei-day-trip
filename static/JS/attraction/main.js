@@ -35,8 +35,7 @@ async function initialPage(){
 
 window.addEventListener("load", ()=>{ 
     initialPage()
-    addMemberInPageListener()
-    
+    addMemberInPageListener() 
 });
 
 profileTimeContainer.addEventListener("click", (e)=>{
