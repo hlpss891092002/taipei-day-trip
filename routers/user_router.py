@@ -4,6 +4,7 @@ from fastapi.responses import JSONResponse
 from datetime import *
 from  db.member_data_method import *
 from data_class.response_classes import *
+from redis_def.redis_connection import *
 
 
 router = APIRouter()

@@ -9,9 +9,12 @@ from db.attraction_db_method import *
 from data_class.response_classes import *
 from routers import attraction_router, user_router
 
+
 logger = logging.getLogger(__name__)
 Format = ' %(asctime)s - %(message)s'
 logging.basicConfig(filename='app.log', encoding='utf-8', level=logging.INFO, format=Format)
+
+
 
 
 class LogRequestMiddleware(BaseHTTPMiddleware):
