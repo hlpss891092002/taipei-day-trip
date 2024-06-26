@@ -249,6 +249,12 @@ main {
   border: none;
 }
 
+hr {
+  border-style: solid;
+  border-width: 1px 0 0 0 ;
+  color: #e8e8e8;
+}
+
 .separator {
   margin: 40px 0;
   width: 100%;
@@ -299,6 +305,15 @@ main {
     width: 100%;
   }
   .pay-container{
+    width: 100%;
+  }
+  .confirm-total{
+    width: 100%;
+  }
+  .confirm-container{
+    width: 100%;
+  }
+  .confirm-container{
     width: 100%;
   }
 
