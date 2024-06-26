@@ -1,9 +1,9 @@
 import jwt
 from fastapi import *
 from fastapi.responses import JSONResponse
-from datetime import *
-from  db.member_data_method import *
-from data_class.response_classes import *
+from datetime import datetime, timedelta
+from python_model.db.member_data_method import *
+from python_model.data_class.response_classes import *
 from redis_def.redis_connection import *
 
 
@@ -30,13 +30,23 @@ async def sign_up_member(body: signup_data):
 @router.get("/api/user/auth")
 async def get_user_auth(request :Request):
 	try:
+		now = int((datetime.datetime.now()).timestamp())
 		token = request.headers["Authorization"].split()[1]
 		decode_JWT = jwt.decode(token , os.getenv("JWTSECRET"), algorithms=["HS256"])
-		member_data = check_member(decode_JWT["iss"], decode_JWT["email"],)
-		responses_body = one_data_response(
-			data = member_data
-		)
-		return responses_body
+		print(decode_JWT["exp"])
+		print(now)
+		if now > decode_JWT["exp"]:
+			responses_body = one_data_response(
+				data = None
+			)
+			print("Authorization timeout")
+			return responses_body
+		else:
+			member_data = check_member(decode_JWT["iss"], decode_JWT["email"],)
+			responses_body = one_data_response(
+				data = member_data
+			)
+			return responses_body
 	except:
 		responses_body = one_data_response(
 			data = None
@@ -51,8 +61,9 @@ async def sign_in(body: signin_data):
 			payload = {
 				"iss" : member_data["id"],
 				"email" : member_data["email"],
-				"exp": datetime.now() + timedelta(weeks=1)
+				"exp": datetime.datetime.now() + timedelta(days=1)
 				}
+			print(payload["exp"])
 			token = jwt.encode(payload, os.getenv("JWTSECRET"), algorithm="HS256")
 			response_token = {
 				"token" : token

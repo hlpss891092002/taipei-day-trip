@@ -5,17 +5,15 @@ from fastapi.staticfiles import StaticFiles
 from starlette.applications import Starlette
 from starlette.middleware import Middleware
 from starlette.middleware.base import BaseHTTPMiddleware
-from db.attraction_db_method import *
-from data_class.response_classes import *
-from routers import attraction_router, user_router
-
+from fastapi.exceptions import RequestValidationError
+from fastapi.encoders import jsonable_encoder
+from python_model.db.attraction_db_method import *
+from python_model.data_class.response_classes import *
+from routers import attraction_router, user_router, booking_router
 
 logger = logging.getLogger(__name__)
 Format = ' %(asctime)s - %(message)s'
 logging.basicConfig(filename='app.log', encoding='utf-8', level=logging.INFO, format=Format)
-
-
-
 
 class LogRequestMiddleware(BaseHTTPMiddleware):
 		async def dispatch(self, request:Request, call_next):
@@ -26,6 +24,7 @@ class LogRequestMiddleware(BaseHTTPMiddleware):
 app= FastAPI()
 app.include_router(attraction_router.router)
 app.include_router(user_router.router)
+app.include_router(booking_router.router)
 app.add_middleware(LogRequestMiddleware)
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
@@ -47,3 +46,11 @@ async def thankyou(request: Request):
 
 # edit from here
 
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    return JSONResponse(
+        status_code=400,
+				content=jsonable_encoder({
+					"error": True,
+					"message": f"type: {exc.errors()[0]['type']}, loction: {exc.errors()[0]['loc']}"}),
+    )

@@ -1,8 +1,8 @@
 import json
 from fastapi import *
 from fastapi.responses import  JSONResponse
-from db.attraction_db_method import *
-from data_class.response_classes import *
+from python_model.db.attraction_db_method import *
+from python_model.data_class.response_classes import *
 from redis_def.redis_connection import *
 
 

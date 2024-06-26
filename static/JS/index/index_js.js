@@ -1,4 +1,4 @@
-import {appendMask, appendMemberPage, insertSignInPage, insertSignUpPage, BtnEvent, submitEvent, addMemberInPageListener} from "../common/member_sign_page.js"
+import {appendMask, appendMemberPage, insertSignInPage, insertSignUpPage, BtnEvent, submitEvent, addMemberInPageListener,addListenerOnBooking} from "../common/member_sign_page.js"
 import {switchNavToSignedIn, switchNavToUnsigned}from "../common/nav_member_state.js"
 import {getUserDataFromAuthAPI} from "../common/fetch_get_member_auth.js"
 
@@ -112,6 +112,7 @@ async function initialPage(){
 window.addEventListener("load", (e)=>{
     initialPage()
     addMemberInPageListener()
+    addListenerOnBooking()
 });
 
 // MRT bar
