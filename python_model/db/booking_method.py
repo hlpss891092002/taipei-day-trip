@@ -60,12 +60,17 @@ def render_booking_order(member_id):
 
 def delete_booking(member_id):
   con = connection()
-  cursor = con.cursor(dictionary = True)
-  formatted_date = date.strftime('%Y-%m-%d')
+  cursor = con.cursor(dictionary = True, buffered=True)
   try:
-   pass
+   sql = """DELETE FROM booking_order_table WHERE member_id =%s """
+   val = (member_id,)
+   cursor.execute(sql, val)
+   con.commit()
+   print(f"delete member_id:{member_id} booking ")
+   return True
   except:
-    print("fail to get booking order ")
+    print("fail delete booking")
+    
   finally:
     cursor.close()
     con.close()
