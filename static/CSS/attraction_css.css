@@ -9,6 +9,12 @@
   color: #666666;
 }
 
+body {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
 
 .nav-bar {
   display: flex;
@@ -51,6 +57,10 @@ a{
   border: none;
   background-color: #ffffff;
   color: #666666;
+}
+
+.nav-user-btn:hover{
+  cursor: pointer;
 }
 
 hr{
@@ -265,17 +275,18 @@ font-weight: 700;
 
 .footer {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
+  padding: 40px;
   width: 100%;
-  height: 104px;
+  height: 100%;
   background-color: #757575;
   color: #ffffff;
 }
-.footer-text{
+
+.footer-text {
   color: #ffffff;
 }
-
 .page-mask {
   display: none;
   background-color: #000000;

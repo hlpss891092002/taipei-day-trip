@@ -102,6 +102,21 @@ export function submitEvent(){
   });
 };
 
+export function addListenerOnBooking(){
+  const tripBtn = document.querySelector("#trip-btn");
+  tripBtn.addEventListener("click", (e)=>{
+    if(localStorage["userState"]){
+      location.assign("/booking");
+    }else{
+      appendMask();
+      appendMemberPage();
+      insertSignInPage();
+      BtnEvent();
+      submitEvent();
+    }; 
+  });
+};
+
 export function addMemberInPageListener(){
   const memberInBtn = document.querySelector("#member-in-btn")
   memberInBtn.addEventListener("click", (e)=>{

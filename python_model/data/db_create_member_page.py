@@ -1,12 +1,15 @@
 import mysql.connector
-import json
+import mysql.connector.pooling
+from dotenv import load_dotenv
+import os
+load_dotenv()
 
 def connection():
   try:
     dbconfig = {
-        "host":"0.0.0.0",
-        "user":"lucas",
-        "password":"00000000",
+        "host": os.getenv("DBHOST"),
+        "user": os.getenv("DBUSER"),
+        "password": os.getenv("DBPASSWORD"),
         "database":"wehelp_stage2_taipei_spot",
     }
     cnxpool = mysql.connector.pooling.MySQLConnectionPool(
@@ -33,9 +36,9 @@ def createMemberTable():
     cursor.execute(sql,)
     print("create table member_table")
   except:
-    print("fail")
+    print("create table member_table fail")
   finally:
-    con.close()
     cursor.close()
+    con.close()
 
 createMemberTable()

@@ -4,6 +4,8 @@ export async function signUpMember() {
     const name = document.querySelector("#name").value
     const email = document.querySelector("#email").value
     const password = document.querySelector("#password").value
+    const reEmail = /\w+@+\w/
+    console.log(reEmail.test(email))
     if(email && name && password){ 
       const headers = {
         "Content-Type": "application/json",
@@ -24,6 +26,9 @@ export async function signUpMember() {
       if (responseJSON["ok"]){
         responseMessage.classList.toggle("success")
         responseMessage.innerText = "註冊成功，請至登入頁面登入"
+        document.querySelector("#name").value = "";
+        document.querySelector("#email").value = "";
+        document.querySelector("#password").value = "";
       }else if (responseJSON["error"]){
         responseMessage.classList.remove("success")
         responseMessage.innerText = responseJSON["message"]
@@ -42,6 +47,8 @@ export async function signInMember() {
   try{
     const responseMessage = document.querySelector(".response-message")
     const email = document.querySelector("#email").value
+    const reEmail = /\w+@+\w/
+    console.log(reEmail.test(email))
     const password = document.querySelector("#password").value
     if(email && password){ 
       const headers = {

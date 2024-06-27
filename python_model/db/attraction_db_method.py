@@ -1,29 +1,6 @@
-import mysql.connector
-import mysql.connector.pooling
-import json
-import logging
-import jwt
 
-logging_FORMAT = '%(asctime)s %(levelname)s : %(message)s %(funcName)s  %(lineo)d '
-logging.basicConfig(filename="db_searchlogging", level=logging.DEBUG, format=logging_FORMAT)
+from python_model.db.db_connection import *
 
-def connection():
-  try:
-    dbconfig = {
-        "host":"0.0.0.0",
-        "user":"lucas",
-        "password":"00000000",
-        "database":"wehelp_stage2_taipei_spot",
-    }
-    cnxpool = mysql.connector.pooling.MySQLConnectionPool(
-      pool_name="mypool",
-      pool_size=3,
-      **dbconfig
-    )
-    cnx1 = cnxpool.get_connection()
-    return cnx1
-  except:
-    logging.warning("database connection fail")
 
 def get_attraction_by_keyword_page(keyword = None, page = 0):
     cnx1 = connection()
@@ -73,7 +50,7 @@ def get_attraction_by_keyword_page(keyword = None, page = 0):
         return response_data
     except:
       print("錯誤")
-      logging.warning("error in def get_attraction_by_keyword_pag")
+
       return None 
     finally:
       mycursor.close()
@@ -97,7 +74,6 @@ def get_attraction_by_id(id):
     return result
     
   except:
-    logging.log("error in get_attraction_by_keyword_page")
     return None
   finally:
     mycursor.close()
@@ -121,7 +97,9 @@ def get_MRT_ORDERBY_spot_count():
         mrt_list.append(mrt)
     return mrt_list
   except:
-    logging.info("error in def MRT orderby")
+    print("get mrt fail")
   finally:
     mycursor.close()
     cnx1.close() 
+
+

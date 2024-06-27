@@ -1,26 +1,4 @@
-import mysql.connector
-import mysql.connector.pooling
-import json
-
-
-def connection():
-  try:
-    dbconfig = {
-        "host":"0.0.0.0",
-        "user":"lucas",
-        "password":"00000000",
-        "database":"wehelp_stage2_taipei_spot",
-    }
-    cnxpool = mysql.connector.pooling.MySQLConnectionPool(
-      pool_name="mypool",
-      pool_size=3,
-      **dbconfig
-    )
-    cnx1 = cnxpool.get_connection()
-    return cnx1
-  except:
-    print("db connection fail in member_data_method")
-
+from python_model.db.db_connection import *
 
 def add_member(name, email, password):
   con = connection()
@@ -76,3 +54,4 @@ def check_member(id, email):
   finally:
     con.close()
     cursor.close()
+
