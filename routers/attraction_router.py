@@ -4,6 +4,7 @@ from fastapi.responses import  JSONResponse
 from python_model.db.attraction_db_method import *
 from python_model.data_class.response_classes import *
 from redis_def.redis_connection import *
+from python_model.data_class.response_classes import *
 
 
 router = APIRouter()
@@ -24,7 +25,7 @@ async def get_attraction(keyword: str = None, page: int = 0):
 		)
 		return attractions_200
 	except:
-		return JSONResponse(status_code=500, content=error_message_500.dict())
+		return JSONResponse(status_code=500, content=error_message_500.model_dump())
 	
 @router.get("/api/attraction/{attractionId}")
 async def get_attraction_from_id(attractionId):
@@ -34,21 +35,21 @@ async def get_attraction_from_id(attractionId):
 			attraction_id_data = get_attraction_by_id(attractionId)
 			if attraction_id_data is None:
 				set_attraction_data_in_redis(attractionId, attraction_id_data)
-				return JSONResponse(status_code=400, content=error_message_400.dict())
+				return JSONResponse(status_code=400, content=error_message_400.model_dump())
 			else :
 				response_200 = one_data_response(
 					data = attraction_id_data
 				)
 				set_attraction_data_in_redis(attractionId, attraction_id_data) 
-				return 	response_200.dict()
+				return 	response_200.model_dump()
 		else :
 			print(f"get attraction{attractionId}  from cache")
 			response_200 = one_data_response(
 					data = cache_data
 			)
-			return 	response_200.dict()
+			return 	response_200.model_dump()
 	except:
-		return JSONResponse(status_code=500, content=error_message_500.dict())
+		return JSONResponse(status_code=500, content=error_message_500.model_dump())
 
 @router.get("/api/mrts")
 async def get_mrt():
@@ -59,13 +60,13 @@ async def get_mrt():
 					data = get_MRT_ORDERBY_spot_count()
 				)
 				set_mrt_data_in_redis(get_MRT_ORDERBY_spot_count())
-				return response_200.dict()
+				return response_200.model_dump()
 			else :
 				print("get mrts from cache")
 				response_200 = mrts_response(
 					data = cache_data
 				)
-				return response_200.dict()
+				return response_200.model_dump()
 	except:
-		return JSONResponse(status_code=500, content=error_message_500.dict())
+		return JSONResponse(status_code=500, content=error_message_500.model_dump())
 	

@@ -1,7 +1,7 @@
 import {sentFetchWithoutBody} from "../../common/sent_fetch_get_response.js"
 
 export async function deleteBooking(){
-    const result = await sentFetchWithoutBody("delete")
+    const result = await sentFetchWithoutBody("delete", "/api/booking")
     return result["ok"]
 } 
 

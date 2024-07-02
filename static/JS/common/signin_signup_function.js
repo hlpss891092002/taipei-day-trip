@@ -1,42 +1,43 @@
+import{sentFetchWithBody} from "./sent_fetch_get_response.js"
+
 export async function signUpMember() {
   try{
     const responseMessage = document.querySelector(".response-message")
     const name = document.querySelector("#name").value
     const email = document.querySelector("#email").value
     const password = document.querySelector("#password").value
-    const reEmail = /\w+@+\w/
-    console.log(reEmail.test(email))
-    if(email && name && password){ 
-      const headers = {
-        "Content-Type": "application/json",
-        "Accept": "application/json",
-      }
-      const body = {
+    const reEmail = /[A-Za-z0-9]+@+[A-Za-z0-9]+\.+com/
+    const rePassword = /(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[@$!%*?&]).{8,}/ 
+    
+    switch (true){
+      case !email ||  !password || !name:
+        responseMessage.classList.remove("success")
+        responseMessage.innerText = "請填寫註冊資料"
+        return
+      case !reEmail.test(email) :
+        responseMessage.innerText = "請輸入正確電子郵件"
+        return
+      case email  &&  password && name && reEmail.test(email) :
+       const body = {
         "name": `${name}`,
         "email": `${email}`,
         "password": `${password}`
       }
-      let response = await fetch("/api/user",{
-        method:"POST",
-        headers: headers,
-        body: JSON.stringify(body)
-      })
-
-      let responseJSON = await response.json()
+      let response = await sentFetchWithBody("post", body, "/api/user")
+      let responseJSON = await response
+      console.log(responseJSON)
       if (responseJSON["ok"]){
         responseMessage.classList.toggle("success")
         responseMessage.innerText = "註冊成功，請至登入頁面登入"
         document.querySelector("#name").value = "";
         document.querySelector("#email").value = "";
         document.querySelector("#password").value = "";
-      }else if (responseJSON["error"]){
+      }else{
         responseMessage.classList.remove("success")
         responseMessage.innerText = responseJSON["message"]
       }
-    }else{
-      responseMessage.classList.remove("success")
-      responseMessage.innerText = "請確實填寫資料"
     }
+
   }catch{
     console.log("loading signup popup page fail")
   }
@@ -47,40 +48,38 @@ export async function signInMember() {
   try{
     const responseMessage = document.querySelector(".response-message")
     const email = document.querySelector("#email").value
-    const reEmail = /\w+@+\w/
+    const reEmail = /[A-Za-z0-9]+@+[A-Za-z0-9]+\.+com/
     console.log(reEmail.test(email))
     const password = document.querySelector("#password").value
-    if(email && password){ 
-      const headers = {
-        "Content-Type": "application/json",
-        "Accept": "application/json",
-      }
-      const body = {
-        "email": `${email}`,
-        "password": `${password}`
-      }
-      let response = await fetch("/api/user/auth",{
-        method:"PUT", 
-        headers: headers,
-        body: JSON.stringify(body)
-      })
 
-      let responseJSON = await response.json()
-      if (responseJSON["token"]){     
-        localStorage.setItem("userState", `${responseJSON["token"]}`)
-        responseMessage.classList.add("success")
-        responseMessage.innerText = "登入成功，重新載入頁面"
-        location.reload()
-      }else{
+    switch (true){
+      case !email ||  !password:
         responseMessage.classList.remove("success")
-        responseMessage.innerText = responseJSON["message"]
-      }
-    }else{
-      responseMessage.classList.remove("success")
-      responseMessage.innerText = "請確實填寫資料"
-    } 
+        responseMessage.innerText = null
+        return
+      case !reEmail.test(email) :
+        responseMessage.innerText = "請輸入正確電子郵件"
+        return
+      case email  &&  password && reEmail.test(email) :
+        const body = {
+          "email": `${email}`,
+          "password": `${password}`
+        }
+        const response = await sentFetchWithBody("put", body, "/api/user/auth")
+        const responseJSON = await response
+        if (responseJSON["token"]){     
+          localStorage.setItem("userState", `${responseJSON["token"]}`)
+          responseMessage.classList.add("success")
+          responseMessage.innerText = "登入成功，重新載入頁面"
+          location.reload()
+        }else{
+          responseMessage.classList.remove("success")
+          responseMessage.innerText = responseJSON["message"]
+        }
+    }
   }catch{
     console.log("loading signin popup page fail")
   }
   
 };
+

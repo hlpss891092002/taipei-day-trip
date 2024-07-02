@@ -7,9 +7,8 @@ export async function checkSigned(){
     let bookingData = {};
     const username = state["name"];
     bookingData["username"] = username;
-    const data = await sentFetchWithoutBody("GET");
+    const data = await sentFetchWithoutBody("GET","/api/booking");
     bookingData["data"] = data["data"];
-    console.log(bookingData)
     return bookingData;
     }else{
       window.location.replace("/") 

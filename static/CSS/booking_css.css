@@ -202,10 +202,28 @@ main {
 .card-input {
   height: 38px;
   margin-bottom: 15px;
+  display: flex;
+  align-items:  center;
 }
 
 .card-input label {
   font-weight: 400;
+}
+
+.tpfield {
+  /* height: 40px;
+  width: 300px;
+  border: 1px solid gray;
+  margin: 5px 0;
+  padding: 5px; */
+  height: 100%;
+  width: 200px;
+  padding: 0 10px;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #e8e8e8;
+  border-radius: 5px;
+  color: #000000;
 }
 
 .card-input input {
@@ -249,6 +267,10 @@ main {
   border: none;
 }
 
+.confirm-btn:hover {
+  cursor: pointer;
+}
+
 hr {
   border-style: solid;
   border-width: 1px 0 0 0 ;
@@ -274,6 +296,8 @@ hr {
 .footer-text {
   color: #ffffff;
 }
+
+
 
 @media (max-width:1200px) {
   .main-container {

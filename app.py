@@ -1,4 +1,5 @@
 import logging
+import sys
 from fastapi import *
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
@@ -9,7 +10,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.encoders import jsonable_encoder
 from python_model.db.attraction_db_method import *
 from python_model.data_class.response_classes import *
-from routers import attraction_router, user_router, booking_router
+from routers import attraction_router, user_router, booking_router, orders
 
 logger = logging.getLogger(__name__)
 Format = ' %(asctime)s - %(message)s'
@@ -25,6 +26,7 @@ app= FastAPI()
 app.include_router(attraction_router.router)
 app.include_router(user_router.router)
 app.include_router(booking_router.router)
+app.include_router(orders.router)
 app.add_middleware(LogRequestMiddleware)
 app.mount("/static", StaticFiles(directory="static"), name="static")
 

@@ -2,6 +2,7 @@
 from typing import Union
 from pydantic import BaseModel, EmailStr
 import datetime
+
 class error_message(BaseModel):
 	error:bool
 	message: str
@@ -15,22 +16,6 @@ class one_line_ok_200(BaseModel):
 class attractions_response(BaseModel):
 	nextPage: Union[int, None]
 	data: list
-
-class signup_data(BaseModel):
-	name: str
-	email: EmailStr
-	password: str
-
-class booking_order(BaseModel):
-	attractionId: int
-	date: datetime.date
-	time: str
-	price: int
-
-
-class signin_data(BaseModel):
-	email: EmailStr
-	password: str
 
 class mrts_response(BaseModel):
 	data: list

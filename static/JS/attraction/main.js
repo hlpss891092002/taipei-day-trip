@@ -96,7 +96,7 @@ async function sentBookingFetch (id , date, time, price){
         "time": `${time}`,
         "price": `${price}`
       }
-  const response = await (await sentFetchWithBody("post", body))
+  const response = await (await sentFetchWithBody("post", body, "/api/booking"))
   if(response["ok"]){
     location.assign("/booking")
   }
