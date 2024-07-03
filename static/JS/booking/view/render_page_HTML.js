@@ -3,6 +3,7 @@ import {checkSigned} from "../model/check_signed.js"
 import {switchNavToSignedIn}from "../../common/nav_member_state.js"
 import {deleteBooking, setListenerDelete} from "../model/cancel_booking.js"
 import { TPDsetup,} from "../model/tappay_setup.js"
+import {listenContact} from "../model/RegEX.js"
 
 export function renderPageSignedHTML(){
   const bookingContainer = document.querySelector(".booking-container")
@@ -54,6 +55,7 @@ export async function renderBookingPage(){
     addMemberInPageListener()
     addListenerOnBooking()
     setListenerDelete()
+    listenContact()
     TPDsetup(data)
     
   }

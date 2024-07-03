@@ -4,7 +4,7 @@ from pydantic import BaseModel, EmailStr, Field
 import datetime
 import re
 
-phone_pattern = r"09[0-9]{8}"
+phone_pattern = r"^09\d{8}"
 
 class signup_data(BaseModel):
 	name: str

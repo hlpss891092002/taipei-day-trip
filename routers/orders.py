@@ -10,6 +10,7 @@ from starlette import status
 from python_model.data_class.data_type import *
 from python_model.data_class.response_classes import *
 from python_model.db.orders_method import *
+from python_model.db.booking_method import delete_booking
 
 router = APIRouter()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
@@ -51,6 +52,7 @@ async def set_order(body: order_data,  token : Annotated[str, Depends(oauth2_sch
         TPCresponse = requests.post(TPC_url, json = payload, headers= headers).json()
         # print(TPCresponse.json())
         msg = TPCresponse["msg"]
+        delete_booking(member_id)
         if msg == "Success":
           data =  {
             "number": order_id,
