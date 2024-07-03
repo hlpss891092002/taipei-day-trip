@@ -1,5 +1,7 @@
 
-export function TPDsetup(){
+import {sentFetchWithBody} from "../../common/sent_fetch_get_response.js" 
+
+export async function TPDsetup(data){
   TPDirect.setupSDK(151756, 'app_HsPP4zNAlS9HxOTrPux9PxespixJWvDUcVhsM0R5BzyASQWpxrjN9Rt83Xox', 'sandbox')
   let fields = {
       number: {
@@ -64,29 +66,51 @@ export function TPDsetup(){
           endIndex: 11
       }
   })
-  const submitButton = document.getElementById("submit-button")
+  const submitButton = document.getElementById("submit-button");
+
+  async function payment(prime){
+    const name = document.querySelector(".contact-name").value
+    const email = document.querySelector(".contact-email").value
+    const phone = document.querySelector(".contact-telephone").value
+    const body ={}
+    const {price, attraction, date, time} = data
+
+    body["prime"] = prime
+    body["order"] = {
+        "price" : price,
+        "trip" : {
+            "attraction": attraction
+        },
+        "date" : date,
+        "time" : time
+    }
+    body["contact"] = {
+        "name" : name,
+        "email": email,
+        "phone": phone      
+    }
+    const orderData =  await sentFetchWithBody("post", body, "/api/orders");
+    const order_id = orderData["data"]["number"];
+    location.replace(`/thankyou?number=${order_id}`)
+  }
 
   submitButton.addEventListener("click",(e)=>{
     e.preventDefault()
     // 取得 TapPay Fields 的 status
       const tappayStatus = TPDirect.card.getTappayFieldsStatus()
-
       // 確認是否可以 getPrime
       if (tappayStatus.canGetPrime === false) {
-          alert('can not get prime')
+          alert('請輸入信用卡資訊')
           return
       }
-
       // Get prime
+      
       TPDirect.card.getPrime((result) => {
-          if (result.status !== 0) {
-              alert('get prime error ' + result.msg)
-              return
-          }
-          alert('get prime 成功，prime: ' + result.card.prime)
-
-          // send prime to your server, to pay with Pay by Prime API .
-          // Pay By Prime Docs: https://docs.tappaysdk.com/tutorial/zh/back.html#pay-by-prime-api
+        if (result.status !== 0) {
+            alert('get prime error ' + result.msg)
+            return
+        }
+        payment(result.card.prime)
       })
   })
       
@@ -102,35 +126,35 @@ export function TPDsetup(){
         submitButton.setAttribute('disabled', true)
     }
 
-    cardTypes = ['mastercard', 'visa', 'jcb', 'amex', 'unionpay','unknown']
-    if (update.cardType === 'visa') {
-        // Handle card type visa.
-    }
+    // cardTypes = ['mastercard', 'visa', 'jcb', 'amex', 'unionpay','unknown']
+    // if (update.cardType === 'visa') {
+    //     // Handle card type visa.
+    // }
 
     // number 欄位是錯誤的
-    if (update.status.number === 2) {
-        setNumberFormGroupToError()
-    } else if (update.status.number === 0) {
-        setNumberFormGroupToSuccess()
-    } else {
-        setNumberFormGroupToNormal()
-    }
+    // if (update.status.number === 2) {
+    //     setNumberFormGroupToError()
+    // } else if (update.status.number === 0) {
+    //     setNumberFormGroupToSuccess()
+    // } else {
+    //     setNumberFormGroupToNormal()
+    // }
 
-    if (update.status.expiry === 2) {
-        setNumberFormGroupToError()
-    } else if (update.status.expiry === 0) {
-        setNumberFormGroupToSuccess()
-    } else {
-        setNumberFormGroupToNormal()
-    }
+    // if (update.status.expiry === 2) {
+    //     setNumberFormGroupToError()
+    // } else if (update.status.expiry === 0) {
+    //     setNumberFormGroupToSuccess()
+    // } else {
+    //     setNumberFormGroupToNormal()
+    // }
 
-    if (update.status.ccv === 2) {
-        setNumberFormGroupToError()
-    } else if (update.status.ccv === 0) {
-        setNumberFormGroupToSuccess()
-    } else {
-        setNumberFormGroupToNormal()
-    }
+    // if (update.status.ccv === 2) {
+    //     setNumberFormGroupToError()
+    // } else if (update.status.ccv === 0) {
+    //     setNumberFormGroupToSuccess()
+    // } else {
+    //     setNumberFormGroupToNormal()
+    // }
   })
   TPDirect.card.getTappayFieldsStatus()
 

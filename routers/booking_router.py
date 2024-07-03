@@ -9,6 +9,7 @@ from python_model.data_class.response_classes import *
 from python_model.db.booking_method import*
 from python_model.data_class.data_type import *
 
+
 router = APIRouter()
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
@@ -35,7 +36,6 @@ async def get_booking(request:Request, token : Annotated[str, Depends(oauth2_sch
 
 @router.post("/api/booking")
 async def get_booking(request: Request, body:booking_order, token : Annotated[str, Depends(oauth2_scheme)]):
-  print(body)
   try:
     if (token):
       now = int((datetime.datetime.now()).timestamp())
