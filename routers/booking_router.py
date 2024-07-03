@@ -22,7 +22,7 @@ async def get_booking(request:Request, token : Annotated[str, Depends(oauth2_sch
       decode_JWT = jwt.decode(token , os.getenv("JWTSECRET"), algorithms=["HS256"])
       if now > decode_JWT["exp"]:
         print("Authorization timeout")
-        return JSONResponse(status_code=403, content=error_message_403_timeout.model_dump())
+        return JSONResponse(status_code=403, content=error_message_403_timeout.dict())
       else:
         member_id = decode_JWT["iss"]
         responses_200 = one_data_response(
@@ -30,9 +30,9 @@ async def get_booking(request:Request, token : Annotated[str, Depends(oauth2_sch
         )
         return responses_200
     else:
-      return JSONResponse(status_code=403, content=error_message_403_unsigned.model_dump())
+      return JSONResponse(status_code=403, content=error_message_403_unsigned.dict())
   except:
-      return JSONResponse(status_code=500, content=error_message_500.model_dump())
+      return JSONResponse(status_code=500, content=error_message_500.dict())
 
 @router.post("/api/booking")
 async def get_booking(request: Request, body:booking_order, token : Annotated[str, Depends(oauth2_scheme)]):
@@ -42,17 +42,17 @@ async def get_booking(request: Request, body:booking_order, token : Annotated[st
       decode_JWT = jwt.decode(token , os.getenv("JWTSECRET"), algorithms=["HS256"])
       if now > decode_JWT["exp"]:
         print("Authorization timeout")
-        return JSONResponse(status_code=403, content=error_message_403_timeout.model_dump())
+        return JSONResponse(status_code=403, content=error_message_403_timeout.dict())
       else:
         member_id = decode_JWT["iss"]
         if (insert_booking_order(member_id, body.attractionId, body.date, body.time, body.price)):
-          return JSONResponse(status_code=200, content=ok_message_200.model_dump())
+          return JSONResponse(status_code=200, content=ok_message_200.dict())
         else: 
-          return  JSONResponse(status_code=400, content=error_message_booking_fail.model_dump())
+          return  JSONResponse(status_code=400, content=error_message_booking_fail.dict())
     else:
-      return JSONResponse(status_code=403, content=error_message_403_unsigned.model_dump())
+      return JSONResponse(status_code=403, content=error_message_403_unsigned.dict())
   except:
-      return JSONResponse(status_code=500, content=error_message_500.model_dump())
+      return JSONResponse(status_code=500, content=error_message_500.dict())
   
 
 @router.delete("/api/booking")
@@ -63,14 +63,14 @@ async def get_booking(request:Request, token : Annotated[str, Depends(oauth2_sch
         decode_JWT = jwt.decode(token , os.getenv("JWTSECRET"), algorithms=["HS256"])
         if now > decode_JWT["exp"]:
           print("Authorization timeout")
-          return JSONResponse(status_code=403, content=error_message_403_timeout.model_dump())
+          return JSONResponse(status_code=403, content=error_message_403_timeout.dict())
         else:
           member_id = decode_JWT["iss"]
           if (delete_booking(member_id)):
            return ok_message_200 
       else:
-        return JSONResponse(status_code=403, content=error_message_403_unsigned.model_dump())
+        return JSONResponse(status_code=403, content=error_message_403_unsigned.dict())
     except:
-        return JSONResponse(status_code=500, content=error_message_500.model_dump())
+        return JSONResponse(status_code=500, content=error_message_500.dict())
     
     

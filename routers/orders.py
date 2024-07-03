@@ -79,12 +79,12 @@ async def set_order(body: order_data,  token : Annotated[str, Depends(oauth2_sch
           return pay_fail
       else:
         print("order fail")
-        return JSONResponse(status_code=400, content=error_message_order_fail.model_dump())
+        return JSONResponse(status_code=400, content=error_message_order_fail.dict())
     else:
-      return JSONResponse(status_code=403, content=error_message_403_unsigned.model_dump())
+      return JSONResponse(status_code=403, content=error_message_403_unsigned.dict())
   except Exception as e:
     print(f" error in order.py on {e}")
-    return JSONResponse(status_code=500, content=error_message_500.model_dump())
+    return JSONResponse(status_code=500, content=error_message_500.dict())
 
 
 @router.get("/api/orders/{orderNumber}")
@@ -95,7 +95,7 @@ async def set_order(request: Request, orderNumber, token : Annotated[str, Depend
         order_data = getOrderData(orderNumber)
         return order_data
       else:
-        return JSONResponse(status_code=403, content=error_message_403_unsigned.model_dump())
+        return JSONResponse(status_code=403, content=error_message_403_unsigned.dict())
   except Exception as e:
     print(f" error in order.py on {e}")
-    return JSONResponse(status_code=500, content=error_message_500.model_dump())
+    return JSONResponse(status_code=500, content=error_message_500.dict())

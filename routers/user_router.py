@@ -27,9 +27,9 @@ async def sign_up_member(body: signup_data):
 				error = True,
 				message = result
 			)
-			return JSONResponse(status_code=400, content=error_message_signup_fail.model_dump())
+			return JSONResponse(status_code=400, content=error_message_signup_fail.dict())
 	except:
-		return JSONResponse(status_code=500, content=error_message_500.model_dump())
+		return JSONResponse(status_code=500, content=error_message_500.dict())
 
 @router.get("/api/user/auth")
 async def get_user_auth(token : Annotated[str, Depends(oauth2_scheme)]):
@@ -76,7 +76,7 @@ async def sign_in(body: signin_data):
 				error = True,
 				message = "登入失敗，電子郵件或密碼錯誤或其他原因"
 			)
-			return JSONResponse(status_code=400, content=error_message_signup_fail.model_dump())
+			return JSONResponse(status_code=400, content=error_message_signup_fail.dict())
 	except:
-				return JSONResponse(status_code=500, content=error_message_500.model_dump())
+				return JSONResponse(status_code=500, content=error_message_500.dict())
 

@@ -25,7 +25,7 @@ async def get_attraction(keyword: str = None, page: int = 0):
 		)
 		return attractions_200
 	except:
-		return JSONResponse(status_code=500, content=error_message_500.model_dump())
+		return JSONResponse(status_code=500, content=error_message_500.dict())
 	
 @router.get("/api/attraction/{attractionId}")
 async def get_attraction_from_id(attractionId):
@@ -35,21 +35,21 @@ async def get_attraction_from_id(attractionId):
 			attraction_id_data = get_attraction_by_id(attractionId)
 			if attraction_id_data is None:
 				set_attraction_data_in_redis(attractionId, attraction_id_data)
-				return JSONResponse(status_code=400, content=error_message_400.model_dump())
+				return JSONResponse(status_code=400, content=error_message_400.dict())
 			else :
 				response_200 = one_data_response(
 					data = attraction_id_data
 				)
 				set_attraction_data_in_redis(attractionId, attraction_id_data) 
-				return 	response_200.model_dump()
+				return 	response_200.dict()
 		else :
 			print(f"get attraction{attractionId}  from cache")
 			response_200 = one_data_response(
 					data = cache_data
 			)
-			return 	response_200.model_dump()
+			return 	response_200.dict()
 	except:
-		return JSONResponse(status_code=500, content=error_message_500.model_dump())
+		return JSONResponse(status_code=500, content=error_message_500.dict())
 
 @router.get("/api/mrts")
 async def get_mrt():
@@ -60,13 +60,13 @@ async def get_mrt():
 					data = get_MRT_ORDERBY_spot_count()
 				)
 				set_mrt_data_in_redis(get_MRT_ORDERBY_spot_count())
-				return response_200.model_dump()
+				return response_200.dict()
 			else :
 				print("get mrts from cache")
 				response_200 = mrts_response(
 					data = cache_data
 				)
-				return response_200.model_dump()
+				return response_200.dict()
 	except:
-		return JSONResponse(status_code=500, content=error_message_500.model_dump())
+		return JSONResponse(status_code=500, content=error_message_500.dict())
 	
