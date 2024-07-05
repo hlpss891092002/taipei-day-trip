@@ -4,12 +4,13 @@ import {sentFetchWithoutBody} from "../../common/sent_fetch_get_response.js"
 export async function checkSigned(){
   let state = await getUserDataFromAuthAPI()
    if(state){
-    let bookingData = {};
+    let userData = {};
     const username = state["name"];
-    bookingData["username"] = username;
-    const data = await sentFetchWithoutBody("GET","/api/booking");
-    bookingData["data"] = data["data"];
-    return bookingData;
+    userData["username"] = username;
+    const orderId = location.search.split("=")[1];
+    console.log(orderId)
+    userData["orderId"] = orderId;
+    return userData;
     }else{
       window.location.replace("/") 
     }

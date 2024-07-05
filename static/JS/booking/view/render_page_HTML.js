@@ -2,11 +2,12 @@ import {appendMask, appendMemberPage, insertSignInPage, insertSignUpPage, BtnEve
 import {checkSigned} from "../model/check_signed.js"
 import {switchNavToSignedIn}from "../../common/nav_member_state.js"
 import {deleteBooking, setListenerDelete} from "../model/cancel_booking.js"
-
+import { TPDsetup,} from "../model/tappay_setup.js"
+import {listenContact} from "../model/RegEX.js"
 
 export function renderPageSignedHTML(){
-  const mainContainer = document.querySelector(".main-container")
-  mainContainer.innerHTML = '<section class="booking-order">        <div class="booking-head-line">您好</div>        <div class="booking-content-container">      <img class="booking-content-image" src="/static/img/welcome_image.png" alt="">          <div class="booking-content-details">           <div  id="booking-header">台北一日遊：平安鐘</div>            <div class="booking-detail" >日期：<span class="booking-detail-content" id="booking-date"></span></div>            <div class="booking-detail" >時間：<span class="booking-detail-content"  id="booking-time"></span></div>            <div class="booking-detail" >費用：<span class="booking-detail-content" id="booking-cost"></span></div>            <div class="booking-detail" >地點：<span class="booking-detail-content" id="booking-address"></span></div>            <img id="cancel-booking-icon" src="/static/img/icon_delete.png" alt="trash-hban">          </div>        </div>      </section>      <div class="separator-container">        <hr class="separator" />      </div>      <section class="contact-information">  <div class="contact-container">      <div class="contact-header">您的聯絡資訊</div>        <div class="contact-input">          <label for="name">聯絡姓名：</label>          <input type="text" name="name" class="contact-name">        </div>        <div class="contact-input">          <label for="email">聯絡信箱：</label>          <input type="text" name="email" class="contact-email">        </div>        <div class="contact-input">          <label for="telephone">手機號碼：</label>          <input type="text" name="telephone" class="contact-telephone">        </div>        <div class="notice-line">請保持手機暢通，準時到達，導覽人員將用手機與您聯繫，務必留下正確的聯絡方式。</div>  <div>    </section>      <div class="separator-container">        <hr class="separator" />      </div>      <section class="pay-information"> <div class="pay-container">       <div class="pay-header">信用卡付款資訊</div>        <div class="card-input">          <label for="card-number">卡片號碼：</label>          <input type="password" name="card-number" placeholder="**** **** ****" class="card-number">        </div>        <div class="card-input">          <label for="Expiration">過期時間：</label>          <input type="text" name="Expiration" placeholder="MM/YY"  class="card-expiration"        >        </div>        <div class="card-input">          <label for="authorization-password">驗證密碼：</label>          <input type="text" name="authorization-password" placeholder="CVV" class="card-authorization">        </div>   </section> <div class="separator-container">        <hr class="separator" />      </div>   <section class="confirm-total"> <div class="confirm-container">   <div class="total-price">total price</div>    <button type="button" class="confirm-btn">確認訂購並付款</button> </div>  </section>   '
+  const bookingContainer = document.querySelector(".booking-container")
+  bookingContainer.innerHTML = '<section class="booking-order">        <div class="booking-head-line">您好</div>        <div class="booking-content-container">      <img class="booking-content-image" src="/static/img/welcome_image.png" alt="">          <div class="booking-content-details">           <div  id="booking-header">台北一日遊：平安鐘</div>            <div class="booking-detail" >日期：<span class="booking-detail-content" id="booking-date"></span></div>            <div class="booking-detail" >時間：<span class="booking-detail-content"  id="booking-time"></span></div>            <div class="booking-detail" >費用：<span class="booking-detail-content" id="booking-cost"></span></div>            <div class="booking-detail" >地點：<span class="booking-detail-content" id="booking-address"></span></div>            <img id="cancel-booking-icon" src="/static/img/icon_delete.png" alt="trash-hban">          </div>        </div>      </section>      <div class="separator-container">        <hr class="separator" />      </div>      <section class="contact-information">  <div class="contact-container">      <div class="contact-header">您的聯絡資訊</div>        <div class="contact-input">          <label for="name">聯絡姓名：</label>          <input type="text" name="name" class="contact-name">        </div>        <div class="contact-input">          <label for="email">聯絡信箱：</label>          <input type="text" name="email" class="contact-email">        </div>        <div class="contact-input">          <label for="telephone">手機號碼：</label>          <input type="text" name="telephone" class="contact-telephone">        </div>        <div class="notice-line">請保持手機暢通，準時到達，導覽人員將用手機與您聯繫，務必留下正確的聯絡方式。</div>  <div>    </section>      <div class="separator-container">        <hr class="separator" />      </div>       <section class="pay-information"> <div class="pay-container">       <div class="pay-header">信用卡付款資訊</div>         <form> <div class="card-input">          <label for="card-number">卡片號碼：</label>         <div class="tpfield" id="card-number"></div>       </div>        <div class="card-input">          <label for="Expiration">過期時間：</label>          <div class="tpfield" id="card-expiration-date"></div>       </div>        <div class="card-input">          <label for="authorization-password">驗證密碼：</label>          <div class="tpfield" id="card-ccv"></div>        </div>  </form> </section> <div class="separator-container">        <hr class="separator" />      </div>   <section class="confirm-total"> <div class="confirm-container">   <div class="total-price">total price</div>    <button type="button" class="confirm-btn" id="submit-button">確認訂購並付款</button> </div>  </section>   '
 }
 
 export async function renderBookingData(bookingData){
@@ -39,7 +40,6 @@ export function renderBookingMessage(){
 
 export async function renderBookingPage(){
   let bookingData = await checkSigned()
-  console.log(bookingData)
   const{username, data} = bookingData
   if (data === null){
     renderBookingWelcome(username)
@@ -55,5 +55,12 @@ export async function renderBookingPage(){
     addMemberInPageListener()
     addListenerOnBooking()
     setListenerDelete()
+    listenContact()
+    TPDsetup(data)
+    
   }
+}
+
+export async function renderOrderPage(){
+  // let orderData = await  getOrderData()
 }

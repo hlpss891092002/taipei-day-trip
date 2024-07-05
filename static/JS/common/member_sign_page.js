@@ -1,5 +1,5 @@
 import {signUpMember, signInMember} from "./signin_signup_function.js"
-
+// import{listenEmail} from "./signin_signup_function.js"
 const body = document.body;
 
 export function appendMask() {
@@ -15,7 +15,7 @@ export  function appendMemberPage() {
   body.appendChild(memberPage);
 }
 
-export function insertSignUpPage() {
+export async function insertSignUpPage() {
   const memberInPage = document.querySelector(".member_in_page");
   memberInPage.innerHTML = '<div class="decorator-bar"></div>'+
     '<div class="page-container">'+
@@ -33,9 +33,27 @@ export function insertSignUpPage() {
         '<div class="switch-signin switch-btn">點此登入</div>'+
       '</div>'+
     '</div>';
+    const email = await document.querySelector("#email");
+    email.addEventListener("input",(e)=>{
+      const reEmail = /[A-Za-z0-9]+@+[A-Za-z0-9]+\.+com/;
+      if(!reEmail.test(email.value)){
+        email.style.color = "	#AE0000"
+      }else{
+        email.style.color = "	#000000"
+      }
+    })
+        const password = await document.querySelector("#password");
+    password.addEventListener("input",(e)=>{
+      const rePassword = /(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[@$!%*?&]).{8,}/;
+      if(!rePassword.test(password.value)){
+        password.style.color = "	#AE0000"
+      }else{
+        password.style.color = "	#000000"
+      }
+    })
 };
 
-export function insertSignInPage() {
+export async function insertSignInPage() {
   const memberInPage = document.querySelector(".member_in_page");
   memberInPage.innerHTML = '<div class="decorator-bar"></div>'+
     '<div class="page-container">'+
@@ -52,6 +70,16 @@ export function insertSignInPage() {
         '<div class="switch-signup switch-btn">點此註冊</div>'+
       '</div>'+
     '</div>';
+    const email = await document.querySelector("#email");
+    email.addEventListener("input",(e)=>{
+      const reEmail = /[A-Za-z0-9]+@+[A-Za-z0-9]+\.+com/;
+      if(!reEmail.test(email.value)){
+        email.style.color = "	#AE0000"
+      }else{
+        email.style.color = "	#000000"
+      }
+    })
+
 };
 
 export function BtnEvent() {

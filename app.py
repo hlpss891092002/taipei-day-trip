@@ -1,15 +1,16 @@
 import logging
+import sys
 from fastapi import *
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi.responses import FileResponse, JSONResponse, PlainTextResponse
 from fastapi.staticfiles import StaticFiles
 from starlette.applications import Starlette
 from starlette.middleware import Middleware
 from starlette.middleware.base import BaseHTTPMiddleware
-from fastapi.exceptions import RequestValidationError
+from fastapi.exceptions import RequestValidationError, StarletteHTTPException
 from fastapi.encoders import jsonable_encoder
 from python_model.db.attraction_db_method import *
 from python_model.data_class.response_classes import *
-from routers import attraction_router, user_router, booking_router
+from routers import attraction_router, user_router, booking_router, orders
 
 logger = logging.getLogger(__name__)
 Format = ' %(asctime)s - %(message)s'
@@ -25,6 +26,7 @@ app= FastAPI()
 app.include_router(attraction_router.router)
 app.include_router(user_router.router)
 app.include_router(booking_router.router)
+app.include_router(orders.router)
 app.add_middleware(LogRequestMiddleware)
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
@@ -52,5 +54,19 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
         status_code=400,
 				content=jsonable_encoder({
 					"error": True,
-					"message": f"type: {exc.errors()[0]['type']}, loction: {exc.errors()[0]['loc']}"}),
+					"message": f"type: {exc.errors()[0]['msg']}, loction: {exc.errors()[0]['loc']}"}),
     )
+
+# @app.exception_handler(StarletteHTTPException)
+# async def http_exception_handler(request, exc):
+# 		print(f"OMG! An HTTP error!: {repr(exc)}")
+# 		return await http_exception_handler(request, exc)
+@app.exception_handler(StarletteHTTPException)
+async def http_exception_handler(request, exc):
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={
+            "error": True,
+            "message": str(exc.detail)
+        }
+			)

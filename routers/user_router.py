@@ -1,13 +1,17 @@
 import jwt
 from fastapi import *
 from fastapi.responses import JSONResponse
+from fastapi.security import OAuth2PasswordBearer
+from typing_extensions import Annotated
 from datetime import datetime, timedelta
 from python_model.db.member_data_method import *
 from python_model.data_class.response_classes import *
 from redis_def.redis_connection import *
-
+from python_model.data_class.data_type import *
 
 router = APIRouter()
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 @router.post("/api/user")
 async def sign_up_member(body: signup_data):
@@ -26,15 +30,12 @@ async def sign_up_member(body: signup_data):
 			return JSONResponse(status_code=400, content=error_message_signup_fail.dict())
 	except:
 		return JSONResponse(status_code=500, content=error_message_500.dict())
-		
+
 @router.get("/api/user/auth")
-async def get_user_auth(request :Request):
+async def get_user_auth(token : Annotated[str, Depends(oauth2_scheme)]):
 	try:
-		now = int((datetime.datetime.now()).timestamp())
-		token = request.headers["Authorization"].split()[1]
 		decode_JWT = jwt.decode(token , os.getenv("JWTSECRET"), algorithms=["HS256"])
-		print(decode_JWT["exp"])
-		print(now)
+		now = int((datetime.datetime.now()).timestamp())
 		if now > decode_JWT["exp"]:
 			responses_body = one_data_response(
 				data = None
@@ -52,6 +53,7 @@ async def get_user_auth(request :Request):
 			data = None
 		)
 		return responses_body
+
 
 @router.put("/api/user/auth")
 async def sign_in(body: signin_data):

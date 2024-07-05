@@ -4,8 +4,39 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Thank You</title>
+  <link rel="stylesheet" href="/static/CSS/thankyou.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100..900&display=swap" rel="stylesheet" />
+
 </head>
 <body>
-  
+  <nav class="navigation">
+    <div class="nav-bar">
+      <div class="nav-container"> <a href="/">
+          <h2 class="nav-title">台北一日遊</h2>
+        </a>
+        <div class="user-position"> <button class="nav-user-btn" id="trip-btn">預定行程</button> <button class="nav-user-btn"
+            id="member-in-btn"></button> </div>
+      </div>
+    </div>
+  </nav>
+  <hr>
+  <main>
+    <section class="main-container">
+      <div class="order-container">
+        <div class="welcome"></div>
+        <div class="oreder-content">
+          <div class="number"></div>
+          <div class="order-detail-container"></div>
+        </div>
+        <div class="notice"></div>
+      </div>
+    </section>
+  </main>
+  <div class="footer">
+    <div class="footer-text">COPYRIGHT © 2021 台北一日遊</div>
+  </div>
+  <script type="module" src="/static/JS/thankyou/main.js"></script>
 </body>
 </html>

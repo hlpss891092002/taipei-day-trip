@@ -1,7 +1,8 @@
 
 from typing import Union
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, Field
 import datetime
+
 class error_message(BaseModel):
 	error:bool
 	message: str
@@ -16,24 +17,12 @@ class attractions_response(BaseModel):
 	nextPage: Union[int, None]
 	data: list
 
-class signup_data(BaseModel):
-	name: str
-	email: EmailStr
-	password: str
-
-class booking_order(BaseModel):
-	attractionId: int
-	date: datetime.date
-	time: str
-	price: int
-
-
-class signin_data(BaseModel):
-	email: EmailStr
-	password: str
-
 class mrts_response(BaseModel):
 	data: list
+
+
+class order_response(BaseModel):
+	data : dict
 
 error_message_500 = error_message(
 	error = True,
@@ -62,4 +51,8 @@ error_message_booking_fail = error_message(
 
 ok_message_200 =  one_line_ok_200(
 	ok = True
+)
+error_message_order_fail = error_message(
+	error = True,
+	message="訂單建立失敗，輸入不正確或其他原因"
 )
