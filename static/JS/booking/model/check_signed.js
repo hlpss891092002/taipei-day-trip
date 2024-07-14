@@ -6,11 +6,14 @@ export async function checkSigned(){
    if(state){
     let bookingData = {};
     const username = state["name"];
+    const id = state["id"];
     bookingData["username"] = username;
+    bookingData["id"] = id;
     const data = await sentFetchWithoutBody("GET","/api/booking");
     bookingData["data"] = data["data"];
     return bookingData;
     }else{
+      localStorage.clear()
       window.location.replace("/") 
     }
 }
