@@ -5,12 +5,12 @@ export async function sentFetchWithBody(method , body, url){
         "Accept": "application/json",
         "Authorization": `Bearer ${token}`
       }
-      let response = await fetch(`${url}`,{
-        method:`${method.toUpperCase()}`,
-        headers: headers,
-        body: JSON.stringify(body)
-      })
-      let data = response.json()
+        let response = await fetch(`${url}`,{
+          method:`${method.toUpperCase()}`,
+          headers: headers,
+          body: JSON.stringify(body)
+        })
+        let data = response.json()
       return data
 }
 export async function sentFetchWithoutBody(method,url){
