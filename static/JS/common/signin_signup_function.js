@@ -17,6 +17,9 @@ export async function signUpMember() {
       case !reEmail.test(email) :
         responseMessage.innerText = "請輸入正確電子郵件"
         return
+      case !rePassword.test(password) :
+        responseMessage.innerText = "密碼必須包含數字、大小寫英文字母、及特殊符號(@$!%*?&)且長度大於8"
+        return
       case email  &&  password && name && reEmail.test(email) :
        const body = {
         "name": `${name}`,

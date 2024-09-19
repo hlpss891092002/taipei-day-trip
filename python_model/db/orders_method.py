@@ -14,7 +14,6 @@ def insert_order_table(member_id, contact, order):
   contact_name = contact.name
   contact_email = contact.email
   contact_phone = contact.phone
-
   formatted_date = date.strftime('%Y-%m-%d')
   try:
     sql = """REPLACE INTO orders_table (id, member_id, attraction_id, date, time, price, contact_name, contact_email, contact_phone, pay_state)
@@ -95,9 +94,32 @@ def getOrderData(order_id):
     orderData["data"] = data
     return orderData
   
-  # except Exception as e:
-  #   print(f"get order fail on {e}")
+  except Exception as e:
+    print(f"get order fail on {e}")
     return 
   finally:
     cursor.close()
     con.close()
+
+def get_member_order_data(member_id):
+  con = connection()
+  cursor = con.cursor(dictionary = True)
+  try:
+    data = {}
+    sql = """SELECT orders_table.id as number, price, contact_name, contact_email, contact_phone, date, time, pay_state as status,  attraction_data.id AS attraction_id, name, address  FROM (SELECT taipei_attraction.id as id, name, address FROM taipei_attraction 
+     ) as attraction_data INNER JOIN orders_table ON attraction_data.id = orders_table.attraction_id
+    where orders_table.member_id = %s
+    """
+    val = (member_id,)
+    cursor.execute(sql, val)
+    raw_data = cursor.fetchall()
+    data["data"] = raw_data 
+    return(data)
+  
+  except Exception as e:
+    print(f"get order fail on {e}")
+    return 
+  finally:
+    cursor.close()
+    con.close()
+    

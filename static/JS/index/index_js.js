@@ -104,6 +104,7 @@ async function initialPage(){
    if(state){
       switchNavToSignedIn()
     }else{
+      localStorage.clear()
       switchNavToUnsigned() 
     }
 

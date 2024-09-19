@@ -92,12 +92,27 @@ async def set_order(body: order_data,  token : Annotated[str, Depends(oauth2_sch
 @router.get("/api/orders/{orderNumber}")
 async def set_order(request: Request, orderNumber, token : Annotated[str, Depends(oauth2_scheme)]):
   try :
-      if(token):
-        print(orderNumber)
-        order_data = getOrderData(orderNumber)
-        return order_data
-      else:
-        return JSONResponse(status_code=403, content=error_message_403_unsigned.dict())
+    if(token):
+      print(token)
+      print(orderNumber)
+      order_data = getOrderData(orderNumber)
+      return order_data
+    else:
+      return JSONResponse(status_code=403, content=error_message_403_unsigned.dict())
+  except Exception as e:
+    print(f" error in order.py on {e}")
+    return JSONResponse(status_code=500, content=error_message_500.dict())
+  
+@router.get("/api/ordersList/{member_id}")
+async def set_order(request: Request, member_id, token : Annotated[str, Depends(oauth2_scheme)]):
+  try :
+    if(token):
+      print(token)
+      print(member_id)
+      order_data = get_member_order_data(member_id)
+      return order_data
+    else:
+      return JSONResponse(status_code=403, content=error_message_403_unsigned.dict())
   except Exception as e:
     print(f" error in order.py on {e}")
     return JSONResponse(status_code=500, content=error_message_500.dict())

@@ -1,21 +1,17 @@
-import {appendMask, appendMemberPage, insertSignInPage, insertSignUpPage, BtnEvent, submitEvent, addMemberInPageListener,addListenerOnBooking} from "../../common/member_sign_page.js"
-import {checkSigned} from "../model/check_signed.js"
-import {switchNavToSignedIn} from "../../common/nav_member_state.js"
-import {sentFetchWithoutBody} from "../../common/sent_fetch_get_response.js" 
+import {sentFetchWithoutBody} from "../../common/sent_fetch_get_response.js"
 
 
-export function renderOrderDetail(username, orderData){
-  const {data} = orderData
-  const {number, price, trip, status} = data
-  const { date, time, attraction} = trip
-  const {name, image, address} = attraction
+function renderOrderDetail(username, orderData){
+  const {name, address, status, time, price, number, date} = orderData
   console.log(status)
   const welcome = document.querySelector(".welcome")
   const orderContent =document.querySelector(".order-content")
-  const orderNumber =document.querySelector(".number")
+  const orderNumber =document.createElement("div")
+  orderNumber.className = "number"
   const notice =document.querySelector(".notice")
-  const orderDetailContainer =document.querySelector(".order-detail-container")
-  welcome.innerText = `親愛的${username}感謝您的預定行程，您的訂單如下`
+  const orderDetailContainer =document.createElement("div")
+  orderDetailContainer.className = "order-detail-container"
+  welcome.innerText = `親愛的${username}您已預定行程，您的訂單如下`
   orderNumber.innerText  = `訂單編號 : ${number}`
   let attractionInfo = document.createElement("div")
   attractionInfo.className = "attraction-info detail-column"
@@ -63,7 +59,7 @@ export function renderOrderDetail(username, orderData){
   let payTitle = document.createElement("div")
   payTitle.innerText = "付款狀態"
   payTitle.className = "title";
-  let state = status === 1 ? "已付款" : "未付款"
+  let state = status === "PAID" ? "已付款" : "未付款"
   let payContent = document.createElement("div")
   payContent.className = "content"
   payContent.innerText = `${state}`
@@ -75,21 +71,20 @@ export function renderOrderDetail(username, orderData){
   orderDetailContainer.appendChild(priceInfo)
   orderDetailContainer.appendChild(payInfo)
   orderContent.appendChild(orderDetailContainer)
+  console.log(orderDetailContainer)
 }
 
-export async function renderOrderPage(){
-  let userData = await checkSigned()
-  if(userData){
-    const{username, orderId} = await userData
-    const orderData = await sentFetchWithoutBody("GET", `/api/orders/${orderId}`)
-    switchNavToSignedIn()
-    addMemberInPageListener()
-    addListenerOnBooking()
-    renderOrderDetail(username, orderData)
-  }else{
-    localStorage.clear()
-    window.location.replace("/") 
+
+export async function getMemberOrder(username, member_id){
+  let rawData = await sentFetchWithoutBody("get" ,`/api/ordersList/${member_id}`)
+  const data = rawData["data"]
+  let today = new Date
+
+  for (let i = 0; i < data.length; i++){
+    if (Date.parse(data[i]["date"]) > Date.parse(today) ){
+      renderOrderDetail(username, data[i])
+      console.log(i)
+    }
   }
-
 }
-
+  
