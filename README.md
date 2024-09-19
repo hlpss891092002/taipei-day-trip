@@ -2,7 +2,7 @@
 
 ---
 
-![image](https://github.com/hlpss891092002/taipei-day-trip/tree/main/static/img/taipei-day-trip-screenprint.png)
+![image](https://github.com/hlpss891092002/taipei-day-trip/blob/main/static/img/taipei-day-trip-screenprint.png)
 
 Taipei Day Trip is a E-Commerce Tourism RWD Website project.
 
